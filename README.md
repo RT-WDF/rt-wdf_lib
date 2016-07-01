@@ -2,16 +2,16 @@
 
 This is the RT-WDF repository. It is divided into four partitions:
 
-## Libs:
+### Libs:
 This folder contains the actual code of RT-WDF. It also contains the Linear Algebra Lib 'armadillo', and the sample rate conversion framework [r8brain-free](https://github.com/avaneev/r8brain-free-src).
     
-## wdfRenderer
+### wdfRenderer
 The wdfRenderer is an offline audio renderer which processes .wav files through WDF trees and writes an output file rtwdf.wav into your home directory.
     
-## Documentation:
+### Documentation:
 This folder contains documentation about the library.
 
-## Toolchain:
+### Toolchain:
 Here is the place for the [JUCE framework](https://github.com/julianstorer/JUCE).
     
 # Getting started
