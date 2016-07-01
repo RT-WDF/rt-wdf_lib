@@ -9,7 +9,7 @@ This folder contains the actual code of RT-WDF. It also contains the Linear Alge
 The wdfRenderer is an offline audio renderer which processes .wav files through WDF trees and writes an output file rtwdf.wav into your home directory.
     
 ### Documentation:
-This folder contains documentation about the library.
+This folder contains the [API reference documentation](http://htmlpreview.github.io/?https://github.com/m-rest/rt-wdf/blob/master/Libs/rt-wdf/doc/html/index.html) of the RT-WDF library.
 
 ### Toolchain:
 Here is the place for the [JUCE framework](https://github.com/julianstorer/JUCE).
