@@ -36,9 +36,9 @@
 //                                  T R E E
 //==============================================================================
 wdfTree::wdfTree( ) {
-    root            = NULL;
-    ascendingWaves  = NULL;
-    descendingWaves = NULL;
+    root.reset();
+    ascendingWaves.reset();
+    descendingWaves.reset();
     treeSampleRate  = 1;
     T               = 1;
 }
@@ -54,7 +54,7 @@ void wdfTree::cycleWave( ) {
         (*ascendingWaves)[i] = wave;
     }
 
-    root->processAscendingWaves( ascendingWaves, descendingWaves );
+    root->processAscendingWaves( ascendingWaves.get(), descendingWaves.get() );
 
     for( unsigned int i = 0; i < subtreeCount; i++ ) {
         subtreeEntryNodes[i]->pushWaveDown( (*descendingWaves)[i] );
@@ -63,8 +63,8 @@ void wdfTree::cycleWave( ) {
 
 //----------------------------------------------------------------------
 void wdfTree::initTree( ) {
-    ascendingWaves  = new vec( subtreeCount );
-    descendingWaves = new vec( subtreeCount );
+    ascendingWaves.reset( new vec( subtreeCount ) );
+    descendingWaves.reset( new vec( subtreeCount ) );
 
     for( unsigned int i = 0; i < subtreeCount; i++ ) {
         subtreeEntryNodes[i]->setParentInChildren( );
@@ -132,7 +132,7 @@ matData* wdfRoot::getRootMatrPtr( ) {
 //==============================================================================
 wdfRootRtype::wdfRootRtype( int numSubtrees ) : wdfRoot(),
                                                 numSubtrees(numSubtrees) {
-    rootMatrixData = new matData;
+    rootMatrixData.reset( new matData );
     rootMatrixData->Smat.set_size( numSubtrees, numSubtrees );
     rootMatrixData->Emat.set_size(0, 0);
     rootMatrixData->Fmat.set_size(0, 0);
@@ -141,7 +141,7 @@ wdfRootRtype::wdfRootRtype( int numSubtrees ) : wdfRoot(),
 }
 
 wdfRootRtype::~wdfRootRtype( ) {
-    delete rootMatrixData;
+    rootMatrixData.reset();
 }
 
 //----------------------------------------------------------------------
@@ -152,11 +152,11 @@ void wdfRootRtype::processAscendingWaves( vec* ascendingWaves,
 
 //----------------------------------------------------------------------
 matData* wdfRootRtype::getRootMatrPtr( ) {
-    return rootMatrixData;
+    return rootMatrixData.get();
 }
 
 //----------------------------------------------------------------------
-String wdfRootRtype::getType( ) const {
+std::string wdfRootRtype::getType( ) const {
     return "Root (R-type)";
 }
 
@@ -167,10 +167,10 @@ wdfRootNL::wdfRootNL( int numSubtrees,
                       std::vector<int> nlList,
                       int solverType ) : wdfRoot( ),
                                          numSubtrees( numSubtrees ) {
-    rootMatrixData = new matData;
+    rootMatrixData.reset( new matData );
 
     // TODO make ENUM / MAP variant with different nlSolvers (!!)
-    NlSolver              = new nlNewtonSolver( nlList, rootMatrixData );
+    NlSolver.reset( new nlNewtonSolver( nlList, rootMatrixData.get() ) );
     int numNonlinearities = NlSolver->getNumPorts( );
 
     rootMatrixData->Smat.set_size( numSubtrees+numNonlinearities, numSubtrees+numNonlinearities );
@@ -192,11 +192,11 @@ void wdfRootNL::processAscendingWaves( vec* ascendingWaves,
 
 //----------------------------------------------------------------------
 matData* wdfRootNL::getRootMatrPtr( ) {
-    return rootMatrixData;
+    return rootMatrixData.get();
 }
 
 //----------------------------------------------------------------------
-String wdfRootNL::getType( ) const {
+std::string wdfRootNL::getType( ) const {
     return "Root (NL-type)";
 }
 
@@ -221,7 +221,7 @@ void wdfRootSimple::processAscendingWaves( vec* ascendingWaves,
 }
 
 //----------------------------------------------------------------------
-String wdfRootSimple::getType( ) const {
+std::string wdfRootSimple::getType( ) const {
     return "Root (Simple-type)";
 }
 
@@ -256,7 +256,7 @@ double wdfPort::getPortCurrent( ){
 //==============================================================================
 
 wdfTreeNode::wdfTreeNode( ) {
-    upPort = new wdfPort( NULL );
+    upPort.reset( new wdfPort( NULL ) );
 }
 
 wdfTreeNode::~wdfTreeNode( ) {
@@ -266,20 +266,20 @@ wdfTreeNode::wdfTreeNode( wdfTreeNode *left,
                           wdfTreeNode *right ) {
     childrenNodes.push_back( left );
     childrenNodes.push_back( right );
-    upPort = new wdfPort( NULL );
+    upPort.reset( new wdfPort( NULL ) );
 }
 
 wdfTreeNode::wdfTreeNode( std::vector<wdfTreeNode*> childrenIn ) {
     for ( wdfTreeNode* child : childrenIn ) {
         childrenNodes.push_back( child );
     }
-    upPort = new wdfPort( NULL );
+    upPort.reset( new wdfPort( NULL ) );
 }
 
 //----------------------------------------------------------------------
 void wdfTreeNode::setParentInChildren( ) {
     for (wdfTreeNode* child : childrenNodes) {
-        child->parentNode = this;
+        child->parentNode.reset( this );
         child->setParentInChildren( );
     }
 }
@@ -288,7 +288,7 @@ void wdfTreeNode::setParentInChildren( ) {
 void wdfTreeNode::createPorts( ) {
     for( unsigned int i = 0; i < childrenNodes.size(); i++) {
         downPorts.push_back( new wdfPort( childrenNodes[i] ) );
-        childrenNodes[i]->upPort->connectedNode = this;
+        childrenNodes[i]->upPort->connectedNode.reset( this );
         childrenNodes[i]->createPorts( );
     }
 }
@@ -342,7 +342,7 @@ wdfTerminatedAdapter::~wdfTerminatedAdapter( ) {
 #pragma mark Terminated R-type Adapter
 //==============================================================================
 wdfTerminatedRtype::wdfTerminatedRtype( std::vector<wdfTreeNode*> childrenIn ) : wdfTerminatedAdapter( childrenIn ) {
-    S = new mat( childrenIn.size()+1, childrenIn.size()+1 );
+    S.reset( new mat( childrenIn.size()+1, childrenIn.size()+1 ) );
 }
 
 
@@ -400,7 +400,7 @@ void wdfTerminatedRtype::calculateDownB( double descendingWave )
 }
 
 //----------------------------------------------------------------------
-String wdfTerminatedRtype::getType( ) const
+std::string wdfTerminatedRtype::getType( ) const
 {
     return "R-type Adapter (TOP adapted)";
 }
@@ -452,7 +452,7 @@ void wdfTerminatedSeries::calculateDownB( double descendingWave ) {
 }
 
 //----------------------------------------------------------------------
-String wdfTerminatedSeries::getType( ) const {
+std::string wdfTerminatedSeries::getType( ) const {
     return "Series Adapter (TOP adapted)";
 }
 
@@ -502,7 +502,7 @@ void wdfTerminatedParallel::calculateDownB( double descendingWave ) {
 }
 
 //----------------------------------------------------------------------
-String wdfTerminatedParallel::getType( ) const {
+std::string wdfTerminatedParallel::getType( ) const {
     return "Parallel Adapter (TOP adapted)";
 }
 
@@ -534,7 +534,7 @@ void wdfInverter::calculateDownB( double descendingWave ) {
 }
 
 //----------------------------------------------------------------------
-String wdfInverter::getType( ) const {
+std::string wdfInverter::getType( ) const {
     return "Inverter (TOP adapted)";
 }
 
@@ -579,7 +579,7 @@ void wdfTerminatedCap::calculateDownB( double descendingWave ) {
 }
 
 //----------------------------------------------------------------------
-String wdfTerminatedCap::getType( ) const {
+std::string wdfTerminatedCap::getType( ) const {
     return "C (adapted)";
 }
 
@@ -611,7 +611,7 @@ void wdfTerminatedInd::calculateDownB( double descendingWave ) {
 }
 
 //----------------------------------------------------------------------
-String wdfTerminatedInd::getType( ) const {
+std::string wdfTerminatedInd::getType( ) const {
     return "L (adapted)";
 }
 
@@ -638,7 +638,7 @@ void wdfTerminatedRes::calculateDownB( double descendingWave ) {
 }
 
 //----------------------------------------------------------------------
-String wdfTerminatedRes::getType( ) const {
+std::string wdfTerminatedRes::getType( ) const {
     return "R (adapted)";
 }
 
@@ -667,7 +667,7 @@ void wdfTerminatedResVSource::calculateDownB( double descendingWave ) {
 }
 
 //----------------------------------------------------------------------
-String wdfTerminatedResVSource::getType( ) const {
+std::string wdfTerminatedResVSource::getType( ) const {
     return "Vs (incl. Rp = RSer -> adapted)";
 }
 
@@ -725,7 +725,7 @@ void wdfUnterminatedSwitch::setSwitch( int position ) {
 }
 
 //----------------------------------------------------------------------
-String wdfUnterminatedSwitch::getType( ) const {
+std::string wdfUnterminatedSwitch::getType( ) const {
     return "SW (unadapted)";
 }
 
@@ -752,7 +752,7 @@ void wdfUnterminatedCap::calculateDownB( vec* ascendingWaves,
 }
 
 //----------------------------------------------------------------------
-String wdfUnterminatedCap::getType( ) const {
+std::string wdfUnterminatedCap::getType( ) const {
     return "C (unadapted)";
 }
 
@@ -784,7 +784,7 @@ void wdfUnterminatedInd::calculateDownB( vec* ascendingWaves,
 }
 
 //----------------------------------------------------------------------
-String wdfUnterminatedInd::getType( ) const {
+std::string wdfUnterminatedInd::getType( ) const {
     return "L (unadapted)";
 }
 
@@ -810,7 +810,7 @@ void wdfUnterminatedRes::calculateDownB( vec* ascendingWaves,
 }
 
 //----------------------------------------------------------------------
-String wdfUnterminatedRes::getType( ) const {
+std::string wdfUnterminatedRes::getType( ) const {
     return "R (unadapted)";
 }
 
@@ -836,7 +836,7 @@ void wdfIdealVSource::calculateDownB( vec* ascendingWaves,
 }
 
 //----------------------------------------------------------------------
-String wdfIdealVSource::getType( ) const {
+std::string wdfIdealVSource::getType( ) const {
     return "Vs (ideal -> unadapted)";
 }
 
@@ -861,7 +861,7 @@ void wdfIdealCSource::calculateDownB( vec* ascendingWaves,
 }
 
 //----------------------------------------------------------------------
-String wdfIdealCSource::getType( ) const {
+std::string wdfIdealCSource::getType( ) const {
     return "Is (ideal -> unadapted)";
 }
 

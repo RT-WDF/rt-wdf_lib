@@ -30,7 +30,6 @@
 #define __RTWDF_H__
 
 //==============================================================================
-#include "../../JuceLibraryCode/JuceHeader.h"
 #include <memory>
 
 
@@ -107,7 +106,7 @@ protected:
     /**
      Pointer to the root object of this tree.
      */
-    ScopedPointer<wdfRoot> root;
+    std::unique_ptr<wdfRoot> root;
 
     //----------------------------------------------------------------------
     /**
@@ -120,13 +119,13 @@ protected:
     /**
      Pointer to a vector of ascending waves towards the root.
      */
-    ScopedPointer<vec> ascendingWaves;
+    std::unique_ptr<vec> ascendingWaves;
 
     //----------------------------------------------------------------------
     /**
      Pointer to a vector of descending waves from the root.
      */
-    ScopedPointer<vec> descendingWaves;
+    std::unique_ptr<vec> descendingWaves;
 
     //----------------------------------------------------------------------
     /**
@@ -360,7 +359,7 @@ public:
 
      @returns                   a String describing the type of this root
      */
-    virtual String getType( ) const = 0;
+    virtual std::string getType( ) const = 0;
 
 };
 
@@ -373,7 +372,7 @@ private:
      Pointer to an object which holds all matrices of coefficients of the
      root.
      */
-    ScopedPointer<matData> rootMatrixData;
+    std::unique_ptr<matData> rootMatrixData;
 
     //----------------------------------------------------------------------
     /**
@@ -433,7 +432,7 @@ public:
      @returns                   a String describing the type of this root as
                                 "Root (R-type)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
 };
 
@@ -448,7 +447,7 @@ private:
      Pointer to an object which holds all matrices of coefficients of the
      root.
      */
-    ScopedPointer<matData> rootMatrixData;
+    std::unique_ptr<matData> rootMatrixData;
 
     //----------------------------------------------------------------------
     /**
@@ -461,7 +460,7 @@ private:
      Pointer to a NL Solver which solves the implicit scattering loop
      around the non-linearities in the root.
      */
-    ScopedPointer<nlNewtonSolver> NlSolver;
+    std::unique_ptr<nlNewtonSolver> NlSolver;
 
 public:
     //----------------------------------------------------------------------
@@ -523,7 +522,7 @@ public:
      @returns                   a String describing the type of this root as
                                 "Root (NL-type)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
 };
 
@@ -537,7 +536,7 @@ private:
     /**
      Pointer to a single unadapted root element.
      */
-    ScopedPointer<wdfRootNode> rootElement;
+    std::unique_ptr<wdfRootNode> rootElement;
 
 public:
     //----------------------------------------------------------------------
@@ -580,7 +579,7 @@ public:
      @returns                   a String describing the type of this root  as
                                 "Root (Simple-type)"
      */
-    virtual String getType( ) const ;
+    virtual std::string getType( ) const ;
 
 };
 
@@ -647,7 +646,7 @@ public:
     /**
      Pointer to the node that connects to that port.
      */
-    ScopedPointer<wdfTreeNode> connectedNode;
+    std::unique_ptr<wdfTreeNode> connectedNode;
 
 };
 
@@ -820,19 +819,19 @@ public:
 
      @returns                   a String describing the type of this root
      */
-    virtual String getType( ) const = 0;
+    virtual std::string getType( ) const = 0;
 
     //----------------------------------------------------------------------
     /**
      Pointer to the upfacing port object of this node.
      */
-    ScopedPointer<wdfPort> upPort;
+    std::unique_ptr<wdfPort> upPort;
 
     //----------------------------------------------------------------------
     /**
      Pointer to the connected parent node of this node.
      */
-    ScopedPointer<wdfTreeNode> parentNode;
+    std::unique_ptr<wdfTreeNode> parentNode;
 
 protected:
     //----------------------------------------------------------------------
@@ -974,7 +973,7 @@ public:
      @returns                   a String describing the type of this adaptor as
                                 "R-type Adapter (TOP adapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
 protected:
     //----------------------------------------------------------------------
@@ -984,7 +983,7 @@ protected:
      Size:  (childNodeCount+1) x (childNodeCount+1)
             ("+1" for upfacing port)
      */
-    ScopedPointer<mat> S;
+    std::unique_ptr<mat> S;
 
 };
 
@@ -1077,7 +1076,7 @@ public:
      @returns                   a String describing the type of this adaptor as
                                 "Series Adapter (TOP adapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
 };
 
@@ -1170,7 +1169,7 @@ public:
      @returns                   a String describing the type of this adaptor as
                                 "Parallel Adapter (TOP adapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
 };
 
@@ -1244,7 +1243,7 @@ public:
      @returns                   a String describing the type of this adaptor as
                                 "Inverter (TOP adapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
 };
 
@@ -1336,7 +1335,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "C (adapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
@@ -1417,7 +1416,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "L (adapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
@@ -1494,7 +1493,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "R (adapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
@@ -1566,7 +1565,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "Vs (incl. Rp = RSer -> adapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
@@ -1663,7 +1662,7 @@ public:
 
      @returns                   a String describing the type of this root node
      */
-    virtual String getType( ) const = 0;
+    virtual std::string getType( ) const = 0;
 
 };
 
@@ -1725,7 +1724,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "Unadapted controllable switch"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
 };
 
@@ -1808,7 +1807,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "C (unadapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
@@ -1894,7 +1893,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "L (unadapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
@@ -1963,7 +1962,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "R (unadapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
@@ -2018,7 +2017,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "Vs (ideal -> unadapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
@@ -2073,7 +2072,7 @@ public:
      @returns                   a String describing the type of this leaf as
                                 "Is (ideal -> unadapted)"
      */
-    virtual String getType( ) const;
+    virtual std::string getType( ) const;
 
     //----------------------------------------------------------------------
     /**
