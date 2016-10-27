@@ -126,7 +126,7 @@ public:
         subtreeEntryNodes[0] = P1;
 
         // tree stuff
-        root = new wdfRootSimple( SW1 );
+        root.reset( new wdfRootSimple( SW1 ) );
         Rp   = new double[subtreeCount]( );
 
         // params

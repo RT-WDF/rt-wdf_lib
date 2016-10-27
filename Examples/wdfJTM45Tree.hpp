@@ -187,7 +187,7 @@ public:
 		subtreeEntryNodes[14] = RPB1;
 		subtreeEntryNodes[15] = RGN1A;
 		subtreeEntryNodes[16] = RIB;
-		root = new wdfRootNL(subtreeCount, {TRI_DW, TRI_DW, TRI_DW, TRI_DW}, 1);
+		root.reset( new wdfRootNL(subtreeCount, {TRI_DW, TRI_DW, TRI_DW, TRI_DW}, 1) );
 		Rp = new double[subtreeCount] ();
 	}
 

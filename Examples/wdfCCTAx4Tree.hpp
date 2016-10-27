@@ -98,7 +98,7 @@ public:
         subtreeEntryNodes[4] = tree5;
         subtreeEntryNodes[5] = tree6;
 
-        root = new wdfRootNL(subtreeCount, {TRI_DW}, 1);
+        root.reset( new wdfRootNL(subtreeCount, {TRI_DW}, 1) );
         Rp = new double[subtreeCount] ();
     }
 
@@ -123,7 +123,7 @@ public:
         delete tree6;
 
         delete subtreeEntryNodes;
-        delete root;
+        root.reset();
         delete Rp;
     }
 

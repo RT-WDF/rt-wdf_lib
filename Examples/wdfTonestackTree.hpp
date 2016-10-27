@@ -149,7 +149,7 @@ public:
         subtreeEntryNodes[4] = Res4;
         subtreeEntryNodes[5] = Cap3;
 
-        root = new wdfRootRtype( subtreeCount );
+        root.reset( new wdfRootRtype( subtreeCount ) );
         Rp   = new double[subtreeCount]( );
     }
 
