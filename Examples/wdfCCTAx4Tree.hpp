@@ -35,24 +35,24 @@ using namespace arma;
 class wdfCCTAx4Tree: public wdfTree {
 
 private:
-    ScopedPointer<wdfTerminatedResVSource> Vin;
-    ScopedPointer<wdfTerminatedResVSource> E;
-    ScopedPointer<wdfTerminatedCap> CI;
-    ScopedPointer<wdfTerminatedRes> RI;
-    ScopedPointer<wdfTerminatedRes> RG;
-    ScopedPointer<wdfTerminatedCap> CGK;
-    ScopedPointer<wdfTerminatedCap> CGP;
-    ScopedPointer<wdfTerminatedCap> CPK;
-    ScopedPointer<wdfTerminatedRes> RK;
-    ScopedPointer<wdfTerminatedCap> CK;
-    ScopedPointer<wdfTerminatedCap> CO;
-    ScopedPointer<wdfTerminatedRes> RO;
-    ScopedPointer<wdfTerminatedParallel> subtree4b;
-    ScopedPointer<wdfTerminatedParallel> tree5;
-    ScopedPointer<wdfTerminatedParallel> tree6;
-    ScopedPointer<wdfTerminatedSeries> subtree4a;
-    ScopedPointer<wdfTerminatedSeries> tree4;
-    ScopedPointer<wdfTerminatedSeries> subtree5a;
+    std::unique_ptr<wdfTerminatedResVSource> Vin;
+    std::unique_ptr<wdfTerminatedResVSource> E;
+    std::unique_ptr<wdfTerminatedCap> CI;
+    std::unique_ptr<wdfTerminatedRes> RI;
+    std::unique_ptr<wdfTerminatedRes> RG;
+    std::unique_ptr<wdfTerminatedCap> CGK;
+    std::unique_ptr<wdfTerminatedCap> CGP;
+    std::unique_ptr<wdfTerminatedCap> CPK;
+    std::unique_ptr<wdfTerminatedRes> RK;
+    std::unique_ptr<wdfTerminatedCap> CK;
+    std::unique_ptr<wdfTerminatedCap> CO;
+    std::unique_ptr<wdfTerminatedRes> RO;
+    std::unique_ptr<wdfTerminatedParallel> subtree4b;
+    std::unique_ptr<wdfTerminatedParallel> tree5;
+    std::unique_ptr<wdfTerminatedParallel> tree6;
+    std::unique_ptr<wdfTerminatedSeries> subtree4a;
+    std::unique_ptr<wdfTerminatedSeries> tree4;
+    std::unique_ptr<wdfTerminatedSeries> subtree5a;
     std::string treeName = "Dempwolf CCTA - 176400 Hz";
 
 public:
@@ -70,24 +70,24 @@ public:
         inputGain.highLim = 2;
         params.push_back(inputGain);
 
-        Vin = new wdfTerminatedResVSource(0,1);
-        E = new wdfTerminatedResVSource(250,100000);
-        CI = new wdfTerminatedCap(1.000000e-07,1);
-        RI = new wdfTerminatedRes(1000000);
-        RG = new wdfTerminatedRes(20000);
-        CGK = new wdfTerminatedCap(1.600000e-12,1);
-        CGP = new wdfTerminatedCap(1.700000e-12,1);
-        CPK = new wdfTerminatedCap(4.600000e-13,1);
-        RK = new wdfTerminatedRes(1500);
-        CK = new wdfTerminatedCap(1.000000e-05,1);
-        CO = new wdfTerminatedCap(1.000000e-08,1);
-        RO = new wdfTerminatedRes(1000000);
-        subtree4a = new wdfTerminatedSeries(CI,Vin);
-        subtree4b = new wdfTerminatedParallel(RI,subtree4a);
-        tree4 = new wdfTerminatedSeries(RG,subtree4b);
-        subtree5a = new wdfTerminatedSeries(RO,CO);
-        tree5 = new wdfTerminatedParallel(E,subtree5a);
-        tree6 = new wdfTerminatedParallel(CK,RK);
+        Vin.reset( wdfTerminatedResVSource(0,1) );
+        E.reset( wdfTerminatedResVSource(250,100000) );
+        CI.reset( wdfTerminatedCap(1.000000e-07,1) );
+        RI.reset( wdfTerminatedRes(1000000) );
+        RG.reset( wdfTerminatedRes(20000) );
+        CGK.reset( wdfTerminatedCap(1.600000e-12,1) );
+        CGP.reset( wdfTerminatedCap(1.700000e-12,1) );
+        CPK.reset( wdfTerminatedCap(4.600000e-13,1) );
+        RK.reset( wdfTerminatedRes(1500) );
+        CK.reset( wdfTerminatedCap(1.000000e-05,1) );
+        CO.reset( wdfTerminatedCap(1.000000e-08,1) );
+        RO.reset( wdfTerminatedRes(1000000) );
+        subtree4a.reset( wdfTerminatedSeries(CI,Vin) );
+        subtree4b.reset( wdfTerminatedParallel(RI,subtree4a) );
+        tree4.reset( wdfTerminatedSeries(RG,subtree4b) );
+        subtree5a.reset( wdfTerminatedSeries(RO,CO) );
+        tree5.reset( wdfTerminatedParallel(E,subtree5a) );
+        tree6.reset( wdfTerminatedParallel(CK,RK) );
 
         subtreeCount = 6;
         subtreeEntryNodes = new wdfTreeNode*[subtreeCount];
@@ -103,24 +103,24 @@ public:
     }
 
     ~wdfCCTAx4Tree() {
-        delete Vin;
-        delete E;
-        delete CI;
-        delete RI;
-        delete RG;
-        delete CGK;
-        delete CGP;
-        delete CPK;
-        delete RK;
-        delete CK;
-        delete CO;
-        delete RO;
-        delete subtree4a;
-        delete subtree4b;
-        delete tree4;
-        delete subtree5a;
-        delete tree5;
-        delete tree6;
+        Vin.reset();
+        E.reset();
+        CI.reset();
+        RI.reset();
+        RG.reset();
+        CGK.reset();
+        CGP.reset();
+        CPK.reset();
+        RK.reset();
+        CK.reset();
+        CO.reset();
+        RO.reset();
+        subtree4a.reset();
+        subtree4b.reset();
+        tree4.reset();
+        subtree5a.reset();
+        tree5.reset();
+        tree6.reset();
 
         delete subtreeEntryNodes;
         root.reset();

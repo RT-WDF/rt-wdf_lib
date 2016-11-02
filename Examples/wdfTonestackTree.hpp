@@ -115,30 +115,30 @@ public:
         // build up the circuit.
 
         // ROOT PORT A
-        Vres = new wdfTerminatedResVSource(0,1);
-        Res3m = new wdfTerminatedRes(params[1].value * R3);
-        S1 =  new wdfTerminatedSeries(Vres, Res3m);
+        Vres.reset( wdfTerminatedResVSource(0,1) );
+        Res3m.reset( wdfTerminatedRes(params[1].value * R3) );
+        S1.reset( wdfTerminatedSeries(Vres, Res3m) );
 
         // ROOT PORT B
-        Res2 = new wdfTerminatedRes(params[0].value * R2);
-        Res3p = new wdfTerminatedRes((1 - params[1].value) * R3);
-        S3  = new wdfTerminatedSeries(Res2, Res3p);
+        Res2.reset( wdfTerminatedRes(params[0].value * R2) );
+        Res3p.reset( wdfTerminatedRes((1 - params[1].value) * R3) );
+        S3.reset( wdfTerminatedSeries(Res2, Res3p) );
 
         // ROOT PORT C
-        Res1p = new wdfTerminatedRes((1 - params[2].value) * R1);
-        Res1m = new wdfTerminatedRes(params[2].value * R1);
-        S4 = new wdfTerminatedSeries(Res1p, Res1m);
-        Cap1 = new wdfTerminatedCap(C1, 1);
-        S2 =  new wdfTerminatedSeries(Cap1, S4);
+        Res1p.reset( wdfTerminatedRes((1 - params[2].value) * R1) );
+        Res1m.reset( wdfTerminatedRes(params[2].value * R1) );
+        S4.reset( wdfTerminatedSeries(Res1p, Res1m) );
+        Cap1.reset( wdfTerminatedCap(C1, 1) );
+        S2.reset( wdfTerminatedSeries(Cap1, S4) );
 
         // ROOT PORT D
-        Cap2 = new wdfTerminatedCap(C2, 1);
+        Cap2.reset( wdfTerminatedCap(C2, 1) );
 
         // ROOT PORT E
-        Res4 =  new wdfTerminatedRes(R4);
+        Res4.reset( wdfTerminatedRes(R4) );
 
         // ROOT PORT F
-        Cap3 = new wdfTerminatedCap(C3, 1);
+        Cap3.reset(wdfTerminatedCap(C3, 1) );
 
         subtreeCount      = 6;
         subtreeEntryNodes = new wdfTreeNode*[subtreeCount];
