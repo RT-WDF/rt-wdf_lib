@@ -17,12 +17,12 @@ using namespace juce;
 #include "../../../../Libs/r8brain-free-src/CDSPResampler.h"
 
 // Circuits
-#include "../../../../Examples/wdfSwitchTree.hpp"
+// ## When changing circuits, remember to init the right tree around line 85!  ##
+//#include "../../../../Examples/wdfCCTAx1Tree.hpp"
+//#include "../../../../Examples/wdfCCTAx4Tree.hpp"
+//#include "../../../../Examples/wdfJTM45Tree.hpp"
+//#include "../../../../Examples/wdfSwitchTree.hpp"
 #include "../../../../Examples/wdfTonestackTree.hpp"
-#include "../../../../Examples/wdfJTM45Tree.hpp"
-#include "../../../../Examples/wdfCCTAx4Tree.hpp"
-#include "../../../../Examples/wdfCCTAx1Tree.hpp"
-
 
 
 //==============================================================================
@@ -82,6 +82,13 @@ public:
         renderButton.addListener (this);
         renderButton.setEnabled (false);
 
+        
+        // ## Change to corresponding tree here ##
+        
+        //myWdfTree = new wdfCCTAx1Tree();
+        //myWdfTree = new wdfCCTAx4Tree();
+        //myWdfTree = new wdfJTM45Tree();
+        //myWdfTree = new wdfSwitchTree();
         myWdfTree = new wdfTonestackTree();
         myWdfTree->initTree();
 
