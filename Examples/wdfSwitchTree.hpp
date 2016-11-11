@@ -113,20 +113,20 @@ public:
         subtreeCount = 1;
 
         // build up the circuit.
-        Vres.reset( wdfTerminatedResVSource( 0, 1 ) );
-        Res1.reset( wdfTerminatedRes( R1 ) );
-        Res2.reset( wdfTerminatedRes( R2 ) );
-        RT1.reset( wdfTerminatedRtype_RT1( Vres, Res1 ) );
-        S1.reset( wdfTerminatedSeries( Vres, Res1 ) );
-        P1.reset( wdfTerminatedParallel( S1, Res2 ) );
-        SW1.reset( wdfUnterminatedSwitch(0) );
+        Vres.reset( new wdfTerminatedResVSource( 0, 1 ) );
+        Res1.reset( new wdfTerminatedRes( R1 ) );
+        Res2.reset( new wdfTerminatedRes( R2 ) );
+        RT1.reset( new wdfTerminatedRtype_RT1( Vres.get(), Res1.get() ) );
+        S1.reset( new wdfTerminatedSeries( Vres.get(), Res1.get() ) );
+        P1.reset( new wdfTerminatedParallel( S1.get(), Res2.get() ) );
+        SW1.reset( new wdfUnterminatedSwitch(0) );
         SW1->setSwitch(1);
 
         subtreeEntryNodes    = new wdfTreeNode*[subtreeCount];
-        subtreeEntryNodes[0] = P1;
+        subtreeEntryNodes[0] = P1.get();
 
         // tree stuff
-        root.reset( new wdfRootSimple( SW1 ) );
+        root.reset( new wdfRootSimple( SW1.get() ) );
         Rp   = new double[subtreeCount]( );
 
         // params

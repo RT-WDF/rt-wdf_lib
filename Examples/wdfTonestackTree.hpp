@@ -48,23 +48,23 @@ private:
     const float R3 = 25e3;
     const float R4 = 56e3;
 
-    ScopedPointer<wdfTerminatedCap> Cap1;
-    ScopedPointer<wdfTerminatedCap> Cap2;
-    ScopedPointer<wdfTerminatedCap> Cap3;
+    std::unique_ptr<wdfTerminatedCap> Cap1;
+    std::unique_ptr<wdfTerminatedCap> Cap2;
+    std::unique_ptr<wdfTerminatedCap> Cap3;
 
-    ScopedPointer<wdfTerminatedRes> Res1p;
-    ScopedPointer<wdfTerminatedRes> Res1m;
-    ScopedPointer<wdfTerminatedRes> Res2;
-    ScopedPointer<wdfTerminatedRes> Res3m;
-    ScopedPointer<wdfTerminatedRes> Res3p;
-    ScopedPointer<wdfTerminatedRes> Res4;
+    std::unique_ptr<wdfTerminatedRes> Res1p;
+    std::unique_ptr<wdfTerminatedRes> Res1m;
+    std::unique_ptr<wdfTerminatedRes> Res2;
+    std::unique_ptr<wdfTerminatedRes> Res3m;
+    std::unique_ptr<wdfTerminatedRes> Res3p;
+    std::unique_ptr<wdfTerminatedRes> Res4;
 
-    ScopedPointer<wdfTerminatedResVSource> Vres;
+    std::unique_ptr<wdfTerminatedResVSource> Vres;
 
-    ScopedPointer<wdfTerminatedSeries> S1;
-    ScopedPointer<wdfTerminatedSeries> S2;
-    ScopedPointer<wdfTerminatedSeries> S3;
-    ScopedPointer<wdfTerminatedSeries> S4;
+    std::unique_ptr<wdfTerminatedSeries> S1;
+    std::unique_ptr<wdfTerminatedSeries> S2;
+    std::unique_ptr<wdfTerminatedSeries> S3;
+    std::unique_ptr<wdfTerminatedSeries> S4;
 
     std::string treeName = "Fender Tone Stack";
 
@@ -115,39 +115,39 @@ public:
         // build up the circuit.
 
         // ROOT PORT A
-        Vres.reset( wdfTerminatedResVSource(0,1) );
-        Res3m.reset( wdfTerminatedRes(params[1].value * R3) );
-        S1.reset( wdfTerminatedSeries(Vres, Res3m) );
+        Vres.reset( new wdfTerminatedResVSource(0,1) );
+        Res3m.reset( new wdfTerminatedRes(params[1].value * R3) );
+        S1.reset( new wdfTerminatedSeries(Vres.get(), Res3m.get()) );
 
         // ROOT PORT B
-        Res2.reset( wdfTerminatedRes(params[0].value * R2) );
-        Res3p.reset( wdfTerminatedRes((1 - params[1].value) * R3) );
-        S3.reset( wdfTerminatedSeries(Res2, Res3p) );
+        Res2.reset( new wdfTerminatedRes(params[0].value * R2) );
+        Res3p.reset( new wdfTerminatedRes((1 - params[1].value) * R3) );
+        S3.reset( new wdfTerminatedSeries(Res2.get(), Res3p.get()) );
 
         // ROOT PORT C
-        Res1p.reset( wdfTerminatedRes((1 - params[2].value) * R1) );
-        Res1m.reset( wdfTerminatedRes(params[2].value * R1) );
-        S4.reset( wdfTerminatedSeries(Res1p, Res1m) );
-        Cap1.reset( wdfTerminatedCap(C1, 1) );
-        S2.reset( wdfTerminatedSeries(Cap1, S4) );
+        Res1p.reset( new wdfTerminatedRes((1 - params[2].value) * R1) );
+        Res1m.reset( new wdfTerminatedRes(params[2].value * R1) );
+        S4.reset( new wdfTerminatedSeries(Res1p.get(), Res1m.get()) );
+        Cap1.reset( new wdfTerminatedCap(C1, 1) );
+        S2.reset( new wdfTerminatedSeries(Cap1.get(), S4.get()) );
 
         // ROOT PORT D
-        Cap2.reset( wdfTerminatedCap(C2, 1) );
+        Cap2.reset( new wdfTerminatedCap(C2, 1) );
 
         // ROOT PORT E
-        Res4.reset( wdfTerminatedRes(R4) );
+        Res4.reset( new wdfTerminatedRes(R4) );
 
         // ROOT PORT F
-        Cap3.reset(wdfTerminatedCap(C3, 1) );
+        Cap3.reset( new wdfTerminatedCap(C3, 1) );
 
         subtreeCount      = 6;
         subtreeEntryNodes = new wdfTreeNode*[subtreeCount];
-        subtreeEntryNodes[0] = S1;
-        subtreeEntryNodes[1] = S3;
-        subtreeEntryNodes[2] = S2;
-        subtreeEntryNodes[3] = Cap2;
-        subtreeEntryNodes[4] = Res4;
-        subtreeEntryNodes[5] = Cap3;
+        subtreeEntryNodes[0] = S1.get();
+        subtreeEntryNodes[1] = S3.get();
+        subtreeEntryNodes[2] = S2.get();
+        subtreeEntryNodes[3] = Cap2.get();
+        subtreeEntryNodes[4] = Res4.get();
+        subtreeEntryNodes[5] = Cap3.get();
 
         root.reset( new wdfRootRtype( subtreeCount ) );
         Rp   = new double[subtreeCount]( );

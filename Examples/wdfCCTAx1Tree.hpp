@@ -71,33 +71,33 @@ public:
         inputGain.highLim = 2;
         params.push_back(inputGain);
 
-        Vin.reset( wdfTerminatedResVSource(0, 1) );
-        E.reset( wdfTerminatedResVSource(250, 100000) );
-        CI.reset( wdfTerminatedCap(1.000000e-07, 1) );
-        RI.reset( wdfTerminatedRes(1000000) );
-        RG.reset( wdfTerminatedRes(20000) );
-        CGK.reset( wdfTerminatedCap(1.600000e-12, 1) );
-        CGP.reset( wdfTerminatedCap(1.700000e-12, 1) );
-        CPK.reset( wdfTerminatedCap(4.600000e-13, 1) );
-        RK.reset( wdfTerminatedRes(1500) );
-        CK.reset( wdfTerminatedCap(1.000000e-05, 1) );
-        CO.reset( wdfTerminatedCap(1.000000e-08, 1) );
-        RO.reset( wdfTerminatedRes(1000000) );
-        subtree4a.reset( wdfTerminatedSeries(CI,Vin) );
-        subtree4b.reset( wdfTerminatedParallel(RI,subtree4a) );
-        tree4.reset( wdfTerminatedSeries(RG,subtree4b) );
-        subtree5a.reset( wdfTerminatedSeries(RO,CO) );
-        tree5.reset( wdfTerminatedParallel(E,subtree5a) );
-        tree6.reset( wdfTerminatedParallel(CK,RK) );
+        Vin.reset( new wdfTerminatedResVSource(0, 1) );
+        E.reset( new wdfTerminatedResVSource(250, 100000) );
+        CI.reset( new wdfTerminatedCap(1.000000e-07, 1) );
+        RI.reset( new wdfTerminatedRes(1000000) );
+        RG.reset( new wdfTerminatedRes(20000) );
+        CGK.reset( new wdfTerminatedCap(1.600000e-12, 1) );
+        CGP.reset( new wdfTerminatedCap(1.700000e-12, 1) );
+        CPK.reset( new wdfTerminatedCap(4.600000e-13, 1) );
+        RK.reset( new wdfTerminatedRes(1500) );
+        CK.reset( new wdfTerminatedCap(1.000000e-05, 1) );
+        CO.reset( new wdfTerminatedCap(1.000000e-08, 1) );
+        RO.reset( new wdfTerminatedRes(1000000) );
+        subtree4a.reset( new wdfTerminatedSeries( CI.get(), Vin.get() ) );
+        subtree4b.reset( new wdfTerminatedParallel( RI.get(), subtree4a.get() ) );
+        tree4.reset( new wdfTerminatedSeries( RG.get(), subtree4b.get() ) );
+        subtree5a.reset( new wdfTerminatedSeries( RO.get(), CO.get() ) );
+        tree5.reset( new wdfTerminatedParallel( E.get(), subtree5a.get() ) );
+        tree6.reset( new wdfTerminatedParallel( CK.get(), RK.get() ) );
 
         subtreeCount = 6;
         subtreeEntryNodes = new wdfTreeNode*[subtreeCount];
-        subtreeEntryNodes[0] = CGP;
-        subtreeEntryNodes[1] = CGK;
-        subtreeEntryNodes[2] = CPK;
-        subtreeEntryNodes[3] = tree4;
-        subtreeEntryNodes[4] = tree5;
-        subtreeEntryNodes[5] = tree6;
+        subtreeEntryNodes[0] = CGP.get();
+        subtreeEntryNodes[1] = CGK.get();
+        subtreeEntryNodes[2] = CPK.get();
+        subtreeEntryNodes[3] = tree4.get();
+        subtreeEntryNodes[4] = tree5.get();
+        subtreeEntryNodes[5] = tree6.get();
         root.reset( new wdfRootNL(subtreeCount,{TRI_DW}, 1) );
         Rp = new double[subtreeCount] ();
     }
@@ -122,7 +122,7 @@ public:
         tree5.reset();
         tree6.reset();
 
-        subtreeEntryNodes.reset();
+        delete subtreeEntryNodes;
         root.reset();
         delete Rp;
     }
