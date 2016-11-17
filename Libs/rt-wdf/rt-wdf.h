@@ -698,7 +698,7 @@ public:
     /**
      Destructor
      */
-    virtual ~wdfTreeNode( );
+    virtual ~wdfTreeNode( ) {}
 
     //----------------------------------------------------------------------
     /**
@@ -879,11 +879,6 @@ public:
      */
     wdfTerminatedAdapter( std::vector<wdfTreeNode*> childrenIn );
 
-    //----------------------------------------------------------------------
-    /**
-     Destructor
-     */
-    ~wdfTerminatedAdapter( );
 
 };
 
