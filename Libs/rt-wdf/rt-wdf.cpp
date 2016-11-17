@@ -279,7 +279,7 @@ wdfTreeNode::wdfTreeNode( std::vector<wdfTreeNode*> childrenIn ) {
 //----------------------------------------------------------------------
 void wdfTreeNode::setParentInChildren( ) {
     for (wdfTreeNode* child : childrenNodes) {
-        child->parentNode.reset( this );
+        child->parentNode = this ;
         child->setParentInChildren( );
     }
 }
@@ -288,7 +288,7 @@ void wdfTreeNode::setParentInChildren( ) {
 void wdfTreeNode::createPorts( ) {
     for( unsigned int i = 0; i < childrenNodes.size(); i++) {
         downPorts.push_back( new wdfPort( childrenNodes[i] ) );
-        childrenNodes[i]->upPort->connectedNode.reset( this );
+        childrenNodes[i]->upPort->connectedNode = this;
         childrenNodes[i]->createPorts( );
     }
 }

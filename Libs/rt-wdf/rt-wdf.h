@@ -84,7 +84,7 @@ class wdfRootNode;
 //==============================================================================
 class wdfTree {
 
-protected:
+public:
     //----------------------------------------------------------------------
     /**
      Base class for a WDF tree.
@@ -102,6 +102,7 @@ protected:
      */
     virtual ~wdfTree( );
 
+protected:
     //----------------------------------------------------------------------
     /**
      Pointer to the root object of this tree.
@@ -536,7 +537,7 @@ private:
     /**
      Pointer to a single unadapted root element.
      */
-    std::unique_ptr<wdfRootNode> rootElement;
+    wdfRootNode* rootElement;
 
 public:
     //----------------------------------------------------------------------
@@ -646,7 +647,7 @@ public:
     /**
      Pointer to the node that connects to that port.
      */
-    std::unique_ptr<wdfTreeNode> connectedNode;
+    wdfTreeNode* connectedNode;
 
 };
 
@@ -831,7 +832,7 @@ public:
     /**
      Pointer to the connected parent node of this node.
      */
-    std::unique_ptr<wdfTreeNode> parentNode;
+    wdfTreeNode* parentNode;
 
 protected:
     //----------------------------------------------------------------------
@@ -1262,7 +1263,7 @@ public:
      port and non-implicit behaviour.
      */
     wdfTerminatedLeaf();
-
+    
     //----------------------------------------------------------------------
     /**
      This variant of the base classes' calculateScatterCoeffs() function
