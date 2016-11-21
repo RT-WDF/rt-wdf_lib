@@ -1,6 +1,6 @@
 # RT-WDF
 
-RT-WDF is a Real-Time capable Wave Digital Filter Framework for Circuit Modeling with support for arbitrary topologies and multiple/multiport Nonlinearities. It was introduced in a paper at at DAFx-16 which can be found [here](Documentation/40-DAFx-16_paper_35-PN.pdf).
+RT-WDF is a Real-Time capable Wave Digital Filter Framework for Circuit Modeling with support for arbitrary topologies and multiple/multiport Nonlinearities. It was introduced in a paper at DAFx-16 which can be found [here](Documentation/40-DAFx-16_paper_35-PN.pdf).
 
 The repository is divided into four partitions:
 
