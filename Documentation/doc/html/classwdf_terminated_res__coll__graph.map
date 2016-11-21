@@ -1,5 +1,0 @@
-<map id="wdfTerminatedRes" name="wdfTerminatedRes">
-<area shape="rect" id="node2" href="$classwdf_terminated_leaf.html" title="{wdfTerminatedLeaf\n||+ wdfTerminatedLeaf()\l+ calculateScatterCoeffs()\l}" alt="" coords="85,579,229,661"/>
-<area shape="rect" id="node3" href="$classwdf_tree_node.html" title="{wdfTreeNode\n||+ wdfTreeNode()\l+ ~wdfTreeNode()\l+ setParentInChildren()\l+ createPorts()\l+ adaptPorts()\l+ calculateUpRes()\l+ calculateScatterCoeffs()\l+ pullWaveUp()\l+ calculateUpB()\l+ pushWaveDown()\l+ calculateDownB()\l+ getType()\l}" alt="" coords="131,326,276,527"/>
-<area shape="rect" id="node5" href="$classwdf_port.html" title="{wdfPort\n||+ wdfPort()\l+ getPortVoltage()\l+ getPortCurrent()\l}" alt="" coords="70,171,180,264"/>
-</map>

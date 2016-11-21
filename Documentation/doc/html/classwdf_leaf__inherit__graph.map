@@ -1,9 +1,0 @@
-<map id="wdfLeaf" name="wdfLeaf">
-<area shape="rect" id="node3" href="$classwdf_cap.html" title="wdfCap" alt="" coords="5,155,72,181"/>
-<area shape="rect" id="node4" href="$classwdf_ind.html" title="wdfInd" alt="" coords="96,155,157,181"/>
-<area shape="rect" id="node5" href="$classwdf_open.html" title="wdfOpen" alt="" coords="181,155,255,181"/>
-<area shape="rect" id="node6" href="$classwdf_res.html" title="wdfRes" alt="" coords="280,155,347,181"/>
-<area shape="rect" id="node7" href="$classwdf_res_volt.html" title="wdfResVolt" alt="" coords="371,155,461,181"/>
-<area shape="rect" id="node8" href="$classwdf_short.html" title="wdfShort" alt="" coords="485,155,559,181"/>
-<area shape="rect" id="node2" href="$classwdf_node.html" title="wdfNode" alt="" coords="228,5,301,32"/>
-</map>
