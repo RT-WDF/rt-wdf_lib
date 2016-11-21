@@ -1,7 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classnl_model.html" title="nlModel" alt="" coords="5,81,72,108"/>
-<area shape="rect" id="node2" href="$classdiode_ap_model.html" title="diodeApModel" alt="" coords="120,5,224,32"/>
-<area shape="rect" id="node3" href="$classdiode_model.html" title="diodeModel" alt="" coords="128,56,216,83"/>
-<area shape="rect" id="node4" href="$classnpn_em_model.html" title="npnEmModel" alt="" coords="123,107,221,133"/>
-<area shape="rect" id="node5" href="$classtri_dw_model.html" title="triDwModel" alt="" coords="128,157,216,184"/>
-</map>

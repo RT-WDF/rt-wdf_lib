@@ -13,6 +13,8 @@ The wdfRenderer is an offline audio renderer which processes .wav files through 
 ### Documentation:
 This folder contains the [API reference documentation](https://cdn.rawgit.com/m-rest/rt-wdf/master/Documentation/doc/html/index.html) of the RT-WDF library as well as the DAFx-16 paper which describes it's initial architecture.
 
+You will need [doxygen](http://doxygen.org) to regenerate the documentation. Running `doxygen ./Documentation/Doxyfile` will generate the html documentation in a new folder at `../rt-wdf-doc`, which corresponds to the gh-pages branch.
+
 ### Toolchain:
 Here is the place for the [JUCE framework](https://github.com/julianstorer/JUCE).
     
