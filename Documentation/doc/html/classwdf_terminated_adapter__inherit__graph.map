@@ -1,0 +1,7 @@
+<map id="wdfTerminatedAdapter" name="wdfTerminatedAdapter">
+<area shape="rect" id="node3" href="$classwdf_inverter.html" title="wdfInverter" alt="" coords="5,155,91,181"/>
+<area shape="rect" id="node4" href="$classwdf_terminated_parallel.html" title="wdfTerminatedParallel" alt="" coords="115,155,265,181"/>
+<area shape="rect" id="node5" href="$classwdf_terminated_rtype.html" title="wdfTerminatedRtype" alt="" coords="290,155,432,181"/>
+<area shape="rect" id="node6" href="$classwdf_terminated_series.html" title="wdfTerminatedSeries" alt="" coords="457,155,601,181"/>
+<area shape="rect" id="node2" href="$classwdf_tree_node.html" title="wdfTreeNode" alt="" coords="226,5,325,32"/>
+</map>

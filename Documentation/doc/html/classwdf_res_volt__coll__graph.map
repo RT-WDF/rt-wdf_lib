@@ -1,0 +1,5 @@
+<map id="wdfResVolt" name="wdfResVolt">
+<area shape="rect" id="node2" href="$classwdf_leaf.html" title="wdfLeaf" alt="" coords="17,96,84,123"/>
+<area shape="rect" id="node3" href="$classwdf_node.html" title="wdfNode" alt="" coords="57,5,131,32"/>
+<area shape="rect" id="node4" href="$classwdf_port.html" title="wdfPort" alt="" coords="148,96,215,123"/>
+</map>
