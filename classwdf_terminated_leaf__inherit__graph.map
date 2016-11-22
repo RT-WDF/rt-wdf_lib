@@ -1,0 +1,7 @@
+<map id="wdfTerminatedLeaf" name="wdfTerminatedLeaf">
+<area shape="rect" id="node3" href="$classwdf_terminated_cap.html" title="wdfTerminatedCap" alt="" coords="5,152,138,177"/>
+<area shape="rect" id="node4" href="$classwdf_terminated_ind.html" title="wdfTerminatedInd" alt="" coords="162,152,288,177"/>
+<area shape="rect" id="node5" href="$classwdf_terminated_res.html" title="wdfTerminatedRes" alt="" coords="312,152,444,177"/>
+<area shape="rect" id="node6" href="$classwdf_terminated_res_v_source.html" title="wdfTerminatedResVSource" alt="" coords="468,152,651,177"/>
+<area shape="rect" id="node2" href="$classwdf_tree_node.html" title="wdfTreeNode" alt="" coords="250,5,351,31"/>
+</map>
