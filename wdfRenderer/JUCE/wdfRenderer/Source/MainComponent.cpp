@@ -116,7 +116,7 @@ public:
         for (Component* comp : paramLabels) {
             delete comp;
         }
-
+        delete myWdfTree;
     }
 
     void writeLogLine (String logLine) {
