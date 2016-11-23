@@ -259,9 +259,6 @@ wdfTreeNode::wdfTreeNode( ) {
     upPort.reset( new wdfPort( NULL ) );
 }
 
-wdfTreeNode::~wdfTreeNode( ) {
-}
-
 wdfTreeNode::wdfTreeNode( wdfTreeNode *left,
                           wdfTreeNode *right ) {
     childrenNodes.push_back( left );
@@ -335,9 +332,6 @@ wdfTerminatedAdapter::wdfTerminatedAdapter(std::vector<wdfTreeNode*> childrenIn)
 
 }
 
-wdfTerminatedAdapter::~wdfTerminatedAdapter( ) {
-
-}
 
 #pragma mark Terminated R-type Adapter
 //==============================================================================

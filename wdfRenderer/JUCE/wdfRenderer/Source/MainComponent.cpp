@@ -9,6 +9,9 @@
 #ifndef MAINCOMPONENT_H_INCLUDED
 #define MAINCOMPONENT_H_INCLUDED
 
+
+#include <array>
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "RenderThread.h"
 
@@ -17,11 +20,10 @@ using namespace juce;
 #include "../../../../Libs/r8brain-free-src/CDSPResampler.h"
 
 // Circuits
-// ## When changing circuits, remember to init the right tree around line 85!  ##
-//#include "../../../../Examples/wdfCCTAx1Tree.hpp"
-//#include "../../../../Examples/wdfCCTAx4Tree.hpp"
-//#include "../../../../Examples/wdfJTM45Tree.hpp"
-//#include "../../../../Examples/wdfSwitchTree.hpp"
+#include "../../../../Examples/wdfCCTAx1Tree.hpp"
+#include "../../../../Examples/wdfCCTAx4Tree.hpp"
+#include "../../../../Examples/wdfJTM45Tree.hpp"
+#include "../../../../Examples/wdfSwitchTree.hpp"
 #include "../../../../Examples/wdfTonestackTree.hpp"
 
 
@@ -75,28 +77,42 @@ public:
         bitDepthSelector.addItem("24 bits",2);
         bitDepthSelector.addItem("32 bits",3);
         bitDepthSelector.addListener(this);
-
-
+        
+        
+        addAndMakeVisible (&wdfTreeSelector);
+        
+        wdfTreeSelector.addItem("Tone Stack",1);
+        wdfTreeSelector.setSelectedId(1);
+        wdfTreeSelector.addItem("CCTAx1",2);
+        wdfTreeSelector.addItem("CCTAx4",3);
+        wdfTreeSelector.addItem("JTM45",4);
+        wdfTreeSelector.addItem("Switch",5);
+        wdfTreeSelector.addListener(this);
+        
         addAndMakeVisible (&renderButton);
         renderButton.setButtonText ("Render");
         renderButton.addListener (this);
         renderButton.setEnabled (false);
 
         
-        // ## Change to corresponding tree here ##
         
-        //myWdfTree = new wdfCCTAx1Tree();
-        //myWdfTree = new wdfCCTAx4Tree();
-        //myWdfTree = new wdfJTM45Tree();
-        //myWdfTree = new wdfSwitchTree();
-        myWdfTree = new wdfTonestackTree();
-        myWdfTree->initTree();
+        wdfTreeArray[0].reset(new wdfTonestackTree());
+        wdfTreeArray[1].reset(new wdfCCTAx1Tree());
+        wdfTreeArray[2].reset(new wdfCCTAx4Tree());
+        wdfTreeArray[3].reset(new wdfJTM45Tree());
+        wdfTreeArray[4].reset(new wdfSwitchTree());
+        
+        for(auto &wdfTree : wdfTreeArray){
+            wdfTree->initTree();
+        }
+        
+        
+        UpdateWdfTree(0);
+        
 
         writeLogLine("Created WDF tree");
         groupParams.setText(myWdfTree->getTreeIdentifier());
         writeLogLine(String("wdfTree description: ") + String(myWdfTree->getTreeIdentifier()));
-
-        createParamControls(myWdfTree->getParams());
 
         setSize (500, 660);
         writeLogLine("RT-WDF wav-file Renderer. Initializing..");
@@ -108,17 +124,7 @@ public:
 
     }
 
-    ~MainContentComponent() {
-
-        for (Component* comp : paramComponents) {
-            delete comp;
-        }
-        for (Component* comp : paramLabels) {
-            delete comp;
-        }
-        delete myWdfTree;
-    }
-
+    
     void writeLogLine (String logLine) {
         String nowTime = String::formatted(("%08.3f"), (float)((int64)(Time::getCurrentTime().toMilliseconds()) - startupTime) / 1000.0f);
         Logger->insertTextAtCaret("\n"+nowTime+": "+logLine);
@@ -181,7 +187,7 @@ public:
 
         int paramWidth = paramRect.getWidth()/paramsPerCol;
         size_t numParams = 0;
-        for (Component* paramComp : paramComponents) {
+        for (auto& paramComp : paramComponents) {
             paramComp->setBounds(paramRowRect.removeFromLeft(paramWidth).reduced(8));
             numParams++;
             if ( (numParams % paramsPerCol) == 0 ) {
@@ -191,12 +197,12 @@ public:
         }
 
         Rectangle<int> fileButtons = mainScreen.removeFromTop(45);
-        int buttonWidth = fileButtons.getWidth()/3;
+        int buttonWidth = fileButtons.getWidth()/4;
 
         openButton.setBounds ( fileButtons.removeFromLeft(buttonWidth).reduced(8) );
         renderButton.setBounds ( fileButtons.removeFromLeft(buttonWidth).reduced(8) );
         bitDepthSelector.setBounds ( fileButtons.removeFromLeft(buttonWidth).reduced(8) );
-
+        wdfTreeSelector.setBounds ( fileButtons.removeFromLeft(buttonWidth).reduced(8) );
         // Text box positioning
         groupLogger.setBounds(mainScreen);
         Rectangle<int> textbox = mainScreen.withTrimmedTop(7).reduced(5);
@@ -206,8 +212,8 @@ public:
     //=======================================================================
     void sliderValueChanged (Slider* slider) override {
         for (size_t i = 0; i < paramComponents.size(); i++) {
-            if (slider == paramComponents[i]) {
-                myWdfTree->setParam(i,((Slider*)paramComponents[i])->getValue());
+            if (slider == paramComponents[i].get()) {
+                myWdfTree->setParam(i,slider->getValue());
             }
         }
     }
@@ -222,6 +228,9 @@ public:
             } else if (idChosen == 3) {
                 myRenderParams.outputBitDepth = 32;
             }
+        }else if (comboBoxThatHasChanged == &wdfTreeSelector) {
+            int idChosen = comboBoxThatHasChanged->getSelectedId();
+            UpdateWdfTree(idChosen - 1);
         }
     }
 
@@ -241,8 +250,8 @@ public:
         }
         else {
             for (size_t i = 0; i < paramComponents.size(); i++) {
-                if (button == paramComponents[i]) {
-                    myWdfTree->setParam(i,((ToggleButton*)paramComponents[i])->getToggleState());
+                if (button == paramComponents[i].get()) {
+                    myWdfTree->setParam(i,button->getToggleState());
                 }
             }
         }
@@ -255,7 +264,7 @@ protected:
     //==============================================================================
 
     wdfTree* myWdfTree;
-
+    std::array<std::unique_ptr<wdfTree>, 5> wdfTreeArray;
     AudioDeviceManager myDeviceManager;
 
     GroupComponent groupParams;
@@ -300,7 +309,6 @@ protected:
                 writeLogLine("Base samplerate: "+String(Fs)+"Hz");
                 writeLogLine("wdfTree adapted for effective samplerate: "+String(myWdfTree->getSamplerate())+"Hz.");
                 writeLogLine("Resulting OX="+String(oversamplingRatio));
-                myRenderParams.treeSampleRate = myWdfTree->getSamplerate();
 
                 if(upSmplr24) {
                     delete upSmplr24;
@@ -335,7 +343,8 @@ protected:
         myRenderParams.upBuf = upBuf;
         myRenderParams.downBuf = downBuf;
         myRenderParams.blockSize = 512; //TODO
-
+        myRenderParams.treeSampleRate = myWdfTree->getSamplerate();
+        
         myRenderer.setRenderParamsPtr( &myRenderParams );
         writeLogLine("Rendering started");
 
@@ -355,44 +364,62 @@ protected:
     }
 
     void createParamControls(const std::vector<paramData>& paramsIn) {
+        paramComponents.clear();
+        paramLabels.clear();
         for (paramData param : paramsIn) {
             if (param.type == boolParam) {
-                ToggleButton* newButton = new ToggleButton;
-                Label* newLabel = new Label;
-                newLabel->attachToComponent(newButton, false);
+                std::unique_ptr<ToggleButton> newButton(new ToggleButton());
+                std::unique_ptr<Label> newLabel (new Label());
+                newLabel->attachToComponent(newButton.get(), false);
                 newLabel->setText(param.name, dontSendNotification);
                 newButton->setButtonText(param.units);
                 newButton->setToggleState(param.value, dontSendNotification);
                 newButton->addListener (this);
-                addAndMakeVisible (newButton);
-                paramComponents.push_back(newButton);
-                paramLabels.push_back(newLabel);
+                addAndMakeVisible (newButton.get());
+                paramComponents.push_back(std::move(newButton));
+                paramLabels.push_back(std::move(newLabel));
             }
             else if (param.type == doubleParam) {
-                Slider* newSlider = new Slider;
-                Label* newLabel = new Label;
-                newLabel->attachToComponent(newSlider, false);
+                std::unique_ptr<Slider> newSlider(new Slider());
+                std::unique_ptr<Label> newLabel (new Label());
+                newLabel->attachToComponent(newSlider.get(), false);
                 newLabel->setText(param.name, dontSendNotification);
                 newSlider->setSliderStyle(Slider::RotaryVerticalDrag);
                 newSlider->setRange(param.lowLim, param.highLim, 0.001 * (param.highLim - param.lowLim));
                 newSlider->setValue(param.value);
                 newSlider->setColour(Slider::ColourIds::rotarySliderFillColourId, Colours::black);
                 newSlider->addListener (this);
-                addAndMakeVisible (newSlider);
-                paramComponents.push_back(newSlider);
-                paramLabels.push_back(newLabel);
+                addAndMakeVisible (newSlider.get());
+                paramComponents.push_back(std::move(newSlider));
+                paramLabels.push_back(std::move(newLabel));
             }
         }
+        resized();
     }
 
+    
+    void UpdateWdfTree(int inIndex)
+    {
+        
+        myWdfTree = wdfTreeArray[inIndex].get();
+        
+        myWdfTree->adaptTree( );
+        
+        writeLogLine("Created WDF tree");
+        groupParams.setText(myWdfTree->getTreeIdentifier());
+        writeLogLine(String("wdfTree description: ") + String(myWdfTree->getTreeIdentifier()));
+        
+        createParamControls(myWdfTree->getParams());
+    }
 
 
     //==========================================================================
     TextButton openButton;
     TextButton renderButton;
+    ComboBox wdfTreeSelector;
     ComboBox bitDepthSelector;
-    std::vector<Component*> paramComponents;
-    std::vector<Component*> paramLabels;
+    std::vector<std::unique_ptr<Component> > paramComponents;
+    std::vector<std::unique_ptr<Component> > paramLabels;
     double oversamplingRatio;
 
     AudioFormatManager formatManager;
