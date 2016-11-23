@@ -30,7 +30,7 @@
 #define RTWDF_TYPES_H_INCLUDED
 
 
-#include "../armadillo-6.200.5/include/armadillo"
+#include <armadillo>
 using namespace arma;
 
 
