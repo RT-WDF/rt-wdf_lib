@@ -15,7 +15,7 @@ After installing [doxygen](http://doxygen.org), run `doxygen ./Documentation/Dox
 RT-WDF depends on [armadillo](http://arma.sourceforge.net/). Make sure to install the library and it's dependencies. 
 
 # Getting started
-To get started, check out the [wdfRenderer](http://github.com/RT-WDF/rt-wdf_renderer) project, which runs some [reference circuits](http://github.com/RT-WDF/rt-wdf_renderer/Circuits). 
+To get started, check out the [wdfRenderer](http://github.com/RT-WDF/rt-wdf_renderer) project, which runs some [reference circuits](https://github.com/RT-WDF/rt-wdf_renderer/tree/master/Circuits). 
 
 
 # Contact
