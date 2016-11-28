@@ -17,6 +17,8 @@ RT-WDF depends on [armadillo](http://arma.sourceforge.net/). Make sure to instal
 # Getting started
 To get started, check out the [wdfRenderer](http://github.com/RT-WDF/rt-wdf_renderer) project, which runs some [reference circuits](https://github.com/RT-WDF/rt-wdf_renderer/tree/master/Circuits). 
 
-
 # Contact
 Drop a line to rt-wdf@e-rm.de to get in touch!
+
+# Acknoledgements
+Initial development of the RT-WDF libary was partly sponsored by [CCRMA](https://ccrma.stanford.edu)/Stanford University. A special thanks goes to Julius Orion Smith III for making this possible.
