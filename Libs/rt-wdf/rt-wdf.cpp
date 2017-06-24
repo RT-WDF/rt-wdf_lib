@@ -557,7 +557,7 @@ wdfTerminatedCap::wdfTerminatedCap( double C,
 
 //----------------------------------------------------------------------
 double wdfTerminatedCap::calculateUpRes( double T ) {
-    T = T;
+    this->T = T;
     const double R = T / ( 2.0 * C );
     return R;
 }
@@ -589,7 +589,7 @@ wdfTerminatedInd::wdfTerminatedInd( double L,
 
 //----------------------------------------------------------------------
 double wdfTerminatedInd::calculateUpRes( double T ) {
-    T = T;
+    this->T = T;
     const double R = ( 2.0 * L ) / T;
     return R;
 }
@@ -671,7 +671,7 @@ std::string wdfTerminatedResVSource::getType( ) const {
 //                             R O O T   N O D E
 //==============================================================================
 wdfRootNode::wdfRootNode( int numPorts ) {
-    numPorts = numPorts;
+    this->numPorts = numPorts;
 }
 //----------------------------------------------------------------------
 wdfRootNode::~wdfRootNode( ) {
@@ -680,7 +680,7 @@ wdfRootNode::~wdfRootNode( ) {
 
 //----------------------------------------------------------------------
 void wdfRootNode::setPortResistance( double Rp ) {
-    Rp = Rp;
+    this->Rp = Rp;
 }
 
 int wdfRootNode::getNumPorts( ){
@@ -751,7 +751,7 @@ std::string wdfUnterminatedCap::getType( ) const {
 }
 
 void wdfUnterminatedCap::setPortResistance( double Rp ) {
-    Rp = Rp;
+    this->Rp = Rp;
     reflectionCoeff = (Rp - T / (2 * C)) / (Rp + (T / (2 * C)));
 }
 
@@ -783,7 +783,7 @@ std::string wdfUnterminatedInd::getType( ) const {
 }
 
 void wdfUnterminatedInd::setPortResistance( double Rp ) {
-    Rp = Rp;
+    this->Rp = Rp;
     reflectionCoeff = (Rp - 2 * L/T) / (Rp + 2 * L/T);
 }
 
@@ -809,7 +809,7 @@ std::string wdfUnterminatedRes::getType( ) const {
 }
 
 void wdfUnterminatedRes::setPortResistance( double Rp ) {
-    Rp = Rp;
+    this->Rp = Rp;
     reflectionCoeff = (R - Rp) / (R + Rp);
 }
 
@@ -836,7 +836,7 @@ std::string wdfIdealVSource::getType( ) const {
 
 //----------------------------------------------------------------------
 void wdfIdealVSource::setPortResistance( double Rp ) {
-    Rp = Rp;
+    this->Rp = Rp;
 }
 
 #pragma mark Ideal Current Source
@@ -861,6 +861,6 @@ std::string wdfIdealCSource::getType( ) const {
 
 //----------------------------------------------------------------------
 void wdfIdealCSource::setPortResistance( double Rp ) {
-    Rp = Rp;
+    this->Rp = Rp;
 }
 
