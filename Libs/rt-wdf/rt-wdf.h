@@ -320,7 +320,7 @@ public:
      @param Rp                  is a vector of port resistances of all
                                 subtrees of the root.
      */
-    void setPortResistances( double * Rp );
+    virtual void setPortResistances( double * Rp );
 
     //----------------------------------------------------------------------
     /**
@@ -1794,7 +1794,7 @@ public:
 
      @param Rp                  port resistance in Ohm
      */
-    void setPortResistance( double Rp );
+    virtual void setPortResistance( double Rp );
 
     //----------------------------------------------------------------------
     /**
@@ -1880,7 +1880,7 @@ public:
 
      @param Rp                  port resistance in Ohm
      */
-    void setPortResistance( double Rp );
+    virtual void setPortResistance( double Rp );
 
     //----------------------------------------------------------------------
     /**
@@ -1949,7 +1949,7 @@ public:
 
      @param Rp                  port resistance in Ohm
      */
-    void setPortResistance( double Rp );
+    virtual void setPortResistance( double Rp );
 
     //----------------------------------------------------------------------
     /**
@@ -2004,7 +2004,7 @@ public:
 
      @param Rp                  port resistance in Ohm
      */
-    void setPortResistance( double Rp );
+    virtual void setPortResistance( double Rp );
 
     //----------------------------------------------------------------------
     /**
@@ -2059,7 +2059,7 @@ public:
 
      @param Rp                  port resistance in Ohm
      */
-    void setPortResistance( double Rp );
+    virtual void setPortResistance( double Rp );
 
     //----------------------------------------------------------------------
     /**
