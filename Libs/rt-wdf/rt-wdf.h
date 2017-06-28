@@ -1511,7 +1511,7 @@ public:
 
      @param Vs                  initial source voltage in Volts
      @param Rser                physical resistance of the series resistor in
-                                Ohm
+                                Ohms
      */
     wdfTerminatedResVSource( double Vs,
                              double RSer );
@@ -1580,7 +1580,16 @@ public:
 class wdfTerminatedResCSource : public wdfTerminatedLeaf
 {
 public:
+    //----------------------------------------------------------------------
+    /**
+     Adapted resistive current source model class.
 
+     Creates a current source with series resistance Rpar.
+
+     @param Is                  initial source current in Amps
+     @param Rpar                physical resistance of the parallel resistor in
+                                Ohms
+     */
     wdfTerminatedResCSource( double Is,
                              double RPar );
 
@@ -1593,9 +1602,9 @@ public:
      the adaptation law Rup = Rpar.
 
      @param T                   sample period T = 1/fs in seconds as needed to
-     adapt the element
+                                adapt the element
      @returns                   a double type port resistance of that element
-     in Ohms
+                                in Ohms
      */
     virtual double calculateUpRes( double T );
 
