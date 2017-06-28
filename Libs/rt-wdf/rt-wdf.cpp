@@ -665,6 +665,34 @@ std::string wdfTerminatedResVSource::getType( ) const {
     return "Vs (incl. Rp = RSer -> adapted)";
 }
 
+#pragma mark Terminated Resistive CSource
+//==============================================================================
+wdfTerminatedResCSource::wdfTerminatedResCSource( double Is,
+                                                  double RPar ) : wdfTerminatedLeaf( ),
+Is( Is ),
+RPar ( RPar ) {
+
+}
+
+//----------------------------------------------------------------------
+double wdfTerminatedResCSource::calculateUpRes( double T ) {
+    return RPar;
+}
+
+//----------------------------------------------------------------------
+double wdfTerminatedResCSource::calculateUpB( ) {
+    return RPar * Is;
+}
+
+//----------------------------------------------------------------------
+void wdfTerminatedResCSource::calculateDownB( double descendingWave ) {
+    // do nothing, node is terminated/adapted!
+}
+
+//----------------------------------------------------------------------
+std::string wdfTerminatedResCSource::getType( ) const {
+    return "Cs (incl. Rp = RPar -> adapted)";
+}
 
 #pragma mark - Unterminated Root Node -
 //==============================================================================
