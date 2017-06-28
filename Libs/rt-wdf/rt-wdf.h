@@ -1634,7 +1634,7 @@ public:
      Returns a String describing the type of this leaf.
 
      @returns                   a String describing the type of this leaf as
-     "Is (incl. Rp = RPar -> adapted)"
+                                "Is (incl. Rp = RPar -> adapted)"
      */
     virtual std::string getType( ) const;
 
