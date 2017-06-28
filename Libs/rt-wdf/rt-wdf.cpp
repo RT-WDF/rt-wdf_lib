@@ -669,8 +669,8 @@ std::string wdfTerminatedResVSource::getType( ) const {
 //==============================================================================
 wdfTerminatedResCSource::wdfTerminatedResCSource( double Is,
                                                   double RPar ) : wdfTerminatedLeaf( ),
-Is( Is ),
-RPar ( RPar ) {
+                                                                  Is( Is ),
+                                                                  RPar ( RPar ) {
 
 }
 
