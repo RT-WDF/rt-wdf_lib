@@ -1511,7 +1511,7 @@ public:
 
      @param Vs                  initial source voltage in Volts
      @param Rser                physical resistance of the series resistor in
-                                Ohm
+                                Ohms
      */
     wdfTerminatedResVSource( double Vs,
                              double RSer );
@@ -1575,6 +1575,81 @@ public:
     double RSer;
 
 };
+
+//==============================================================================
+class wdfTerminatedResCSource : public wdfTerminatedLeaf
+{
+public:
+    //----------------------------------------------------------------------
+    /**
+     Adapted resistive current source model class.
+
+     Creates a current source with series resistance Rpar.
+
+     @param Is                  initial source current in Amps
+     @param Rpar                physical resistance of the parallel resistor in
+                                Ohms
+     */
+    wdfTerminatedResCSource( double Is,
+                             double RPar );
+
+    //----------------------------------------------------------------------
+    /**
+     Returns the current source's upfacing port resistance.
+
+     This function is called from adaptPorts(). It returns the upfacing
+     port resistance of the node to fulfill termination according to
+     the adaptation law Rup = Rpar.
+
+     @param T                   sample period T = 1/fs in seconds as needed to
+                                adapt the element
+     @returns                   a double type port resistance of that element
+                                in Ohms
+     */
+    virtual double calculateUpRes( double T );
+
+    //----------------------------------------------------------------------
+    /**
+     Returns the upfacing wave component towards the root.
+
+     This function is called from pullWave() to calculate the wave that
+     travels towards the base.
+
+     @returns                   the upward traveling wave of the node
+     */
+    virtual double calculateUpB( );
+
+    //----------------------------------------------------------------------
+    /**
+     Sets the wave component in the downfacing port.
+
+     This function does nothing for the adapted current source.
+
+     @param  descendingWave     incoming wave component on the upfacing port
+     */
+    virtual void calculateDownB( double descendingWave );
+
+    //----------------------------------------------------------------------
+    /**
+     Returns a String describing the type of this leaf.
+
+     @returns                   a String describing the type of this leaf as
+                                "Is (incl. Rp = RPar -> adapted)"
+     */
+    virtual std::string getType( ) const;
+
+    //----------------------------------------------------------------------
+    /**
+     Source current in amps. Change this public variable during operation if
+     necessary according to input samples.
+     */
+    double Is;
+    /**
+     Parallel resistance in Ohms.
+     */
+    double RPar;
+};
+
 
 #pragma mark - Root Nodes
 //==============================================================================
