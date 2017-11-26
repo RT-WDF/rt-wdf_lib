@@ -460,11 +460,12 @@ wdfTerminatedParallel::wdfTerminatedParallel( wdfTreeNode *left,
 
 //----------------------------------------------------------------------
 double wdfTerminatedParallel::calculateUpRes( double sampleRate ) {
-    assert(Rleft > 0 && "Port resistance must be a nonzero positive number.");
-    assert(Rright > 0 && "Port resistance must be a nonzero positive number.");
-
     const double Rleft  = downPorts[0]->Rp;
     const double Rright = downPorts[1]->Rp;
+
+    assert(Rleft > 0 && "Port resistance must be a nonzero positive number.");
+    assert(Rright > 0 && "Port resistance must be a nonzero positive number.");
+    
     const double Rpar   = ( Rleft * Rright ) / ( Rleft + Rright );
     return Rpar;
 }
