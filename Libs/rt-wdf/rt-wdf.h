@@ -1286,7 +1286,7 @@ public:
      */
     wdfTerminatedCap( double C,
                       double T,
-                      double alpha);
+                      double alpha = 1.0 );
 
     //----------------------------------------------------------------------
     /**
@@ -1374,7 +1374,7 @@ public:
      */
     wdfTerminatedInd( double L,
                       double T,
-                      double alpha );
+                      double alpha = 1.0 );
 
     //----------------------------------------------------------------------
     /**
@@ -1854,7 +1854,7 @@ public:
     */
     wdfUnterminatedCap( double C,
                         double T,
-                        double alpha );
+                        double alpha = 1.0 );
 
     //----------------------------------------------------------------------
     /**
@@ -1950,7 +1950,7 @@ public:
     */
     wdfUnterminatedInd( double L,
                         double T,
-                        double alpha );
+                        double alpha = 1.0 );
 
     //----------------------------------------------------------------------
     /**
