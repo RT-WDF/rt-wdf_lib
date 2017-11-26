@@ -1281,9 +1281,12 @@ public:
 
      @param C                  physical capacitance of the component in Farads
      @param T                  sample period T = 1/fs in seconds
+     @param alpha              parameter in alpha transform, default = 1.0
+                               (Bilinear transform)
      */
     wdfTerminatedCap( double C,
-                      double T );
+                      double T,
+                      double alpha);
 
     //----------------------------------------------------------------------
     /**
@@ -1343,6 +1346,11 @@ public:
      */
     double T;
     /**
+     Paramter for alpha transform
+     */
+    double alpha;
+
+    /**
      One sample delay element
      */
     double prevA;
@@ -1361,9 +1369,12 @@ public:
 
      @param L                  physical inductance of the component in Henry
      @param T                  sample period T = 1/fs in seconds
+     @param alpha              parameter in alpha transform, default = 1.0
+                               (Bilinear transform)
      */
     wdfTerminatedInd( double L,
-                      double T );
+                      double T,
+                      double alpha );
 
     //----------------------------------------------------------------------
     /**
@@ -1423,6 +1434,10 @@ public:
      Sample period in seconds
      */
     double T;
+    /**
+     Parameter in alpha-transform
+    */
+    double alpha;
     /**
      One sample delay element
      */
@@ -1834,9 +1849,12 @@ public:
 
      @param C                  physical capacitance of the component in Farads
      @param T                  sample period T = 1/fs in seconds
+     @param alpha              parameter in alpha transform, default = 1.0
+                               (Bilinear transform)
     */
     wdfUnterminatedCap( double C,
-                        double T );
+                        double T,
+                        double alpha );
 
     //----------------------------------------------------------------------
     /**
@@ -1886,6 +1904,11 @@ public:
     */
     double C;
 
+    //----------------------------------------------------------------------
+    /**
+     Parameter in alpha-transform
+    */
+    double alpha;
 };
 
 //==============================================================================
@@ -1922,9 +1945,12 @@ public:
 
      @param L                  physical inductance of the component in Henry
      @param T                  sample period T = 1/fs in seconds
+     @param alpha              parameter in alpha transform, default = 1.0
+                               (Bilinear transform)
     */
     wdfUnterminatedInd( double L,
-                        double T );
+                        double T,
+                        double alpha );
 
     //----------------------------------------------------------------------
     /**
@@ -1971,6 +1997,11 @@ public:
      Inductance in Henry
     */
     double L;
+    //----------------------------------------------------------------------
+    /**
+     Parameter in alpha-transform
+    */
+    double alpha;
 
 };
 

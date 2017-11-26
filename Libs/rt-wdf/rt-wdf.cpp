@@ -548,17 +548,18 @@ void wdfTerminatedLeaf::calculateScatterCoeffs( ) {
 #pragma mark Terminated Capacitor
 //==============================================================================
 wdfTerminatedCap::wdfTerminatedCap( double C,
-                                    double T ) : wdfTerminatedLeaf( ),
+                                    double T,
+                                    double alpha = 1 ) : wdfTerminatedLeaf( ),
                                                  C( C ),
                                                  T( T ),
+                                                 alpha( alpha ),
                                                  prevA( 0 ) {
-
 }
 
 //----------------------------------------------------------------------
 double wdfTerminatedCap::calculateUpRes( double T ) {
     this->T = T;
-    const double R = T / ( 2.0 * C );
+    const double R = T / ( (1.0 + alpha) * C );
     return R;
 }
 
@@ -580,9 +581,11 @@ std::string wdfTerminatedCap::getType( ) const {
 #pragma mark Terminated Inductor
 //==============================================================================
 wdfTerminatedInd::wdfTerminatedInd( double L,
-                                    double T ) : wdfTerminatedLeaf( ),
+                                    double T,
+                                    double alpha = 1.0 ) : wdfTerminatedLeaf( ),
                                                  L( L ),
                                                  T( T ),
+                                                 alpha( alpha ),
                                                  prevA( 0 ) {
 
 }
@@ -590,7 +593,7 @@ wdfTerminatedInd::wdfTerminatedInd( double L,
 //----------------------------------------------------------------------
 double wdfTerminatedInd::calculateUpRes( double T ) {
     this->T = T;
-    const double R = ( 2.0 * L ) / T;
+    const double R = ( (1 + alpha) * L ) / T;
     return R;
 }
 
@@ -754,8 +757,10 @@ std::string wdfUnterminatedSwitch::getType( ) const {
 #pragma mark Unterminated Capacitor
 //==============================================================================
 wdfUnterminatedCap::wdfUnterminatedCap(double C,
-                                       double T ) : wdfRootNode(1),
+                                       double T,
+                                       double alpha = 1.0 ) : wdfRootNode(1),
                                                     T(T),
+                                                    alpha(alpha),
                                                     prevA(0),
                                                     prevB(0),
                                                     C(C) {
@@ -780,14 +785,16 @@ std::string wdfUnterminatedCap::getType( ) const {
 
 void wdfUnterminatedCap::setPortResistance( double Rp ) {
     this->Rp = Rp;
-    reflectionCoeff = (Rp - T / (2 * C)) / (Rp + (T / (2 * C)));
+    reflectionCoeff = (Rp - T / ((1 + alpha) * C)) / (Rp + (T / ((1 + alpha) * C)));
 }
 
 #pragma mark Unterminated Inductor
 //==============================================================================
 wdfUnterminatedInd::wdfUnterminatedInd( double L,
-                                        double T ) : wdfRootNode(1),
+                                        double T,
+                                        double alpha ) : wdfRootNode(1),
                                                      T(T),
+                                                     alpha(alpha),
                                                      prevA(0),
                                                      prevB(0),
                                                      L(L) {
@@ -812,7 +819,7 @@ std::string wdfUnterminatedInd::getType( ) const {
 
 void wdfUnterminatedInd::setPortResistance( double Rp ) {
     this->Rp = Rp;
-    reflectionCoeff = (Rp - 2 * L/T) / (Rp + 2 * L/T);
+    reflectionCoeff = (Rp - (1 + alpha) * L/T) / (Rp + (1 + alpha) * L/T);
 }
 
 
