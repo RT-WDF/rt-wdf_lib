@@ -28,8 +28,7 @@
 
 //==============================================================================
 #include "rt-wdf.h"
-
-
+#include <assert.h>
 
 #pragma mark - Tree
 //==============================================================================
@@ -461,10 +460,13 @@ wdfTerminatedParallel::wdfTerminatedParallel( wdfTreeNode *left,
 
 //----------------------------------------------------------------------
 double wdfTerminatedParallel::calculateUpRes( double sampleRate ) {
+    assert(Rleft > 0 && "Port resistance must be a nonzero positive number.");
+    assert(Rright > 0 && "Port resistance must be a nonzero positive number.");
+
     const double Rleft  = downPorts[0]->Rp;
     const double Rright = downPorts[1]->Rp;
     const double Rpar   = ( Rleft * Rright ) / ( Rleft + Rright );
-    return ( Rpar );
+    return Rpar;
 }
 
 //----------------------------------------------------------------------
@@ -555,6 +557,9 @@ wdfTerminatedCap::wdfTerminatedCap( double C,
 
 //----------------------------------------------------------------------
 double wdfTerminatedCap::calculateUpRes( double sampleRate ) {
+    assert(sampleRate > 0 && "sampleRate must be a nonzero positive number.");
+    assert(C > 0 && "capacitance must be a nonzero positive number.");
+
     this->sampleRate = sampleRate;
     const double R = 1 / ( 2.0 * sampleRate * C );
     return R;
@@ -587,6 +592,9 @@ wdfTerminatedInd::wdfTerminatedInd( double L,
 
 //----------------------------------------------------------------------
 double wdfTerminatedInd::calculateUpRes( double sampleRate ) {
+    assert(sampleRate > 0 && "sampleRate must be a nonzero positive number.");
+    assert(L > 0 && "inductance must be a nonzero positive number.");
+
     this->sampleRate = sampleRate;
     const double R = 2.0 * sampleRate * L ;
     return R;
