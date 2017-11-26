@@ -231,7 +231,6 @@ std::string wdfRootSimple::getType( ) const {
 //                                  P O R T
 //==============================================================================
 wdfPort::wdfPort( wdfTreeNode *connectedNode ) : Rp( 0 ),
-                                                 Gp( 0 ),
                                                  a( 0 ),
                                                  b( 0 ),
                                                  connectedNode( connectedNode ) {

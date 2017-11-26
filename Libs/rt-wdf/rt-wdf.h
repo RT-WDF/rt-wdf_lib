@@ -627,12 +627,6 @@ public:
 
     //----------------------------------------------------------------------
     /**
-     The inverse WDF port resistance in Siemens
-     */
-    double Gp;
-
-    //----------------------------------------------------------------------
-    /**
      Incident wave (incoming wave)
      */
     double a;
@@ -1272,6 +1266,26 @@ public:
 //==============================================================================
 class wdfTerminatedCap : public wdfTerminatedLeaf {
 
+protected:
+    //----------------------------------------------------------------------
+    /**
+     Capacitance in Farad
+     */
+    double C;
+    /**
+     Sample period in seconds
+     */
+    double T;
+    /**
+     Paramter for alpha transform
+     */
+    double alpha;
+
+    /**
+     One sample delay element
+     */
+    double prevA;
+    
 public:
     //----------------------------------------------------------------------
     /**
@@ -1335,25 +1349,6 @@ public:
                                 "C (adapted)"
      */
     virtual std::string getType( ) const;
-
-    //----------------------------------------------------------------------
-    /**
-     Capacitance in Farad
-     */
-    double C;
-    /**
-     Sample period in seconds
-     */
-    double T;
-    /**
-     Paramter for alpha transform
-     */
-    double alpha;
-
-    /**
-     One sample delay element
-     */
-    double prevA;
 
 };
 
