@@ -28,8 +28,7 @@
 
 //==============================================================================
 #include "rt-wdf.h"
-
-
+#include <assert.h>
 
 #pragma mark - Tree
 //==============================================================================
@@ -40,7 +39,6 @@ wdfTree::wdfTree( ) {
     ascendingWaves.reset();
     descendingWaves.reset();
     treeSampleRate  = 1;
-    T               = 1;
 }
 
 wdfTree::~wdfTree( ) {
@@ -75,7 +73,6 @@ void wdfTree::initTree( ) {
 //----------------------------------------------------------------------
 void wdfTree::setSamplerate( double fs ) {
     treeSampleRate  = fs;
-    T               = 1.0f / treeSampleRate;
 }
 
 //----------------------------------------------------------------------
@@ -86,7 +83,7 @@ double wdfTree::getSamplerate( ) {
 //----------------------------------------------------------------------
 int wdfTree::adaptTree( ) {
     for( unsigned int i = 0; i < subtreeCount; i++ ) {
-        subtreeEntryNodes[i]->adaptPorts( T );
+        subtreeEntryNodes[i]->adaptPorts( treeSampleRate );
         Rp[i] = subtreeEntryNodes[i]->upPort->Rp;
         subtreeEntryNodes[i]->calculateScatterCoeffs( );
     }
@@ -290,12 +287,12 @@ void wdfTreeNode::createPorts( ) {
 }
 
 //----------------------------------------------------------------------
-double wdfTreeNode::adaptPorts( double T ) {
+double wdfTreeNode::adaptPorts( double sampleRate ) {
     for( wdfPort* downPort : downPorts ) {
-        downPort->Rp = downPort->connectedNode->adaptPorts( T );
+        downPort->Rp = downPort->connectedNode->adaptPorts( sampleRate );
     }
 
-    upPort->Rp = calculateUpRes( T );
+    upPort->Rp = calculateUpRes( sampleRate );
     return upPort->Rp;
 }
 
@@ -345,7 +342,7 @@ wdfTerminatedRtype::~wdfTerminatedRtype( ) {
 
 //  IMPLEMET THESE METHODS IN THE CIRCUIT TREE
 // //----------------------------------------------------------------------
-// double wdfTerminatedRtype::calculateUpRes( double T )
+// double wdfTerminatedRtype::calculateUpRes( double sampleRate )
 // {
 //     const double Rup = YOUR CODE HERE
 //     return ( Rup );
@@ -410,7 +407,7 @@ wdfTerminatedSeries::wdfTerminatedSeries( wdfTreeNode *left,
 }
 
 //----------------------------------------------------------------------
-double wdfTerminatedSeries::calculateUpRes( double T ) {
+double wdfTerminatedSeries::calculateUpRes( double sampleRate ) {
     const double Rleft  = downPorts[0]->Rp;
     const double Rright = downPorts[1]->Rp;
     const double Rser   = Rleft + Rright;
@@ -461,11 +458,15 @@ wdfTerminatedParallel::wdfTerminatedParallel( wdfTreeNode *left,
 }
 
 //----------------------------------------------------------------------
-double wdfTerminatedParallel::calculateUpRes( double T ) {
+double wdfTerminatedParallel::calculateUpRes( double sampleRate ) {
     const double Rleft  = downPorts[0]->Rp;
     const double Rright = downPorts[1]->Rp;
+
+    assert(Rleft > 0 && "Port resistance must be a nonzero positive number.");
+    assert(Rright > 0 && "Port resistance must be a nonzero positive number.");
+    
     const double Rpar   = ( Rleft * Rright ) / ( Rleft + Rright );
-    return ( Rpar );
+    return Rpar;
 }
 
 //----------------------------------------------------------------------
@@ -505,7 +506,7 @@ wdfInverter::wdfInverter( wdfTreeNode *child ) :  wdfTerminatedAdapter( { child 
 }
 
 //----------------------------------------------------------------------
-double wdfInverter::calculateUpRes( double T ) {
+double wdfInverter::calculateUpRes( double sampleRate ) {
     return downPorts[0]->Rp;
 }
 
@@ -547,18 +548,22 @@ void wdfTerminatedLeaf::calculateScatterCoeffs( ) {
 #pragma mark Terminated Capacitor
 //==============================================================================
 wdfTerminatedCap::wdfTerminatedCap( double C,
-                                    double T,
+                                    double sampleRate,
                                     double alpha) : wdfTerminatedLeaf( ),
                                                  C( C ),
-                                                 T( T ),
+                                                 sampleRate( sampleRate ),
                                                  alpha( alpha ),
                                                  prevA( 0 ) {
 }
 
 //----------------------------------------------------------------------
-double wdfTerminatedCap::calculateUpRes( double T ) {
-    this->T = T;
-    const double R = T / ( (1.0 + alpha) * C );
+double wdfTerminatedCap::calculateUpRes( double sampleRate ) {
+    assert(sampleRate > 0 && "sampleRate must be a nonzero positive number.");
+    assert(C > 0 && "capacitance must be a nonzero positive number.");
+
+    this->sampleRate = sampleRate;
+    const double R = 1 / ( (1.0 + alpha) * sampleRate * C );
+
     return R;
 }
 
@@ -580,19 +585,23 @@ std::string wdfTerminatedCap::getType( ) const {
 #pragma mark Terminated Inductor
 //==============================================================================
 wdfTerminatedInd::wdfTerminatedInd( double L,
-                                    double T,
+                                    double sampleRate,
                                     double alpha ) : wdfTerminatedLeaf( ),
                                                  L( L ),
-                                                 T( T ),
+                                                 sampleRate( sampleRate ),
                                                  alpha( alpha ),
                                                  prevA( 0 ) {
 
 }
 
 //----------------------------------------------------------------------
-double wdfTerminatedInd::calculateUpRes( double T ) {
-    this->T = T;
-    const double R = ( (1.0 + alpha) * L ) / T;
+double wdfTerminatedInd::calculateUpRes( double sampleRate ) {
+    assert(sampleRate > 0 && "sampleRate must be a nonzero positive number.");
+    assert(L > 0 && "inductance must be a nonzero positive number.");
+
+    this->sampleRate = sampleRate;
+    const double R = (1.0 + alpha) * sampleRate * L ;
+
     return R;
 }
 
@@ -619,7 +628,7 @@ wdfTerminatedRes::wdfTerminatedRes( double R ) : wdfTerminatedLeaf( ),
 }
 
 //----------------------------------------------------------------------
-double wdfTerminatedRes::calculateUpRes( double T ) {
+double wdfTerminatedRes::calculateUpRes( double sampleRate ) {
     return R;
 }
 
@@ -648,7 +657,7 @@ wdfTerminatedResVSource::wdfTerminatedResVSource( double Vs,
 }
 
 //----------------------------------------------------------------------
-double wdfTerminatedResVSource::calculateUpRes( double T ) {
+double wdfTerminatedResVSource::calculateUpRes( double sampleRate ) {
     return RSer;
 }
 
@@ -677,7 +686,7 @@ wdfTerminatedResCSource::wdfTerminatedResCSource( double Is,
 }
 
 //----------------------------------------------------------------------
-double wdfTerminatedResCSource::calculateUpRes( double T ) {
+double wdfTerminatedResCSource::calculateUpRes( double sampleRate ) {
     return RPar;
 }
 
@@ -756,9 +765,9 @@ std::string wdfUnterminatedSwitch::getType( ) const {
 #pragma mark Unterminated Capacitor
 //==============================================================================
 wdfUnterminatedCap::wdfUnterminatedCap(double C,
-                                       double T,
+                                       double sampleRate,
                                        double alpha ) : wdfRootNode(1),
-                                                    T(T),
+                                                    sampleRate(sampleRate),
                                                     alpha(alpha),
                                                     prevA(0),
                                                     prevB(0),
@@ -784,15 +793,15 @@ std::string wdfUnterminatedCap::getType( ) const {
 
 void wdfUnterminatedCap::setPortResistance( double Rp ) {
     this->Rp = Rp;
-    reflectionCoeff = (Rp - T / ((1.0 + alpha) * C)) / (Rp + (T / ((1.0 + alpha) * C)));
+    reflectionCoeff = (Rp - 1 / ((1.0 + alpha) * sampleRate * C)) / (Rp + (1 / ((1.0 + alpha) * sampleRate * C)));
 }
 
 #pragma mark Unterminated Inductor
 //==============================================================================
 wdfUnterminatedInd::wdfUnterminatedInd( double L,
-                                        double T,
+                                        double sampleRate,
                                         double alpha ) : wdfRootNode(1),
-                                                     T(T),
+                                                     sampleRate(sampleRate),
                                                      alpha(alpha),
                                                      prevA(0),
                                                      prevB(0),
@@ -818,7 +827,7 @@ std::string wdfUnterminatedInd::getType( ) const {
 
 void wdfUnterminatedInd::setPortResistance( double Rp ) {
     this->Rp = Rp;
-    reflectionCoeff = (Rp - (1.0 + alpha) * L/T) / (Rp + (1.0 + alpha) * L/T);
+    reflectionCoeff = (Rp - (1.0 + alpha) * sampleRate * L) / (Rp + (1.0 + alpha) * sampleRate * L);
 }
 
 
@@ -857,8 +866,8 @@ wdfIdealVSource::wdfIdealVSource( double Vs ) : wdfRootNode(1),
 
 //----------------------------------------------------------------------
 void wdfIdealVSource::calculateDownB( vec* ascendingWaves,
-                                            vec* descendingWaves,
-                                            size_t* portIndex) {
+                                      vec* descendingWaves,
+                                      size_t* portIndex) {
     descendingWaves->at(*portIndex) = 2 * Vs - ascendingWaves->at(*portIndex);
     (*portIndex) += numPorts;
 }
@@ -897,4 +906,3 @@ std::string wdfIdealCSource::getType( ) const {
 void wdfIdealCSource::setPortResistance( double Rp ) {
     this->Rp = Rp;
 }
-

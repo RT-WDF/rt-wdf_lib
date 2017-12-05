@@ -139,12 +139,6 @@ protected:
 
     //----------------------------------------------------------------------
     /**
-     Inverse of treeSampleRate
-     */
-    double T;
-
-    //----------------------------------------------------------------------
-    /**
      Number of subtrees
      */
     size_t subtreeCount;
@@ -196,8 +190,8 @@ public:
     /**
      High level function to adapt all ports in subtrees.
 
-     Recursively adapts all subtrees towards the root according to sample
-     period T. Updates root matrix data afterwards if applicable to take
+     Recursively adapts all subtrees towards the root according to sampleRate.
+     Updates root matrix data afterwards if applicable to take
      new port resistances into account.
      */
     int adaptTree( );
@@ -723,11 +717,11 @@ public:
      and/or adaptation rules and copies it onto connected downfacing ports
      in the parent.
 
-     @param T                   sample period as specified by setSamplerate()
+     @param sampleRate          sample rate as specified by setSamplerate()
      @returns                   a double type up-facing port resistance of that
                                 WDF element
      */
-    double adaptPorts( double T );
+    double adaptPorts( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -738,12 +732,12 @@ public:
      port resistance of a tree node to fulfill adaptation according to
      the respective adaptation law of this node.
 
-     @param T                   sample period T = 1/fs as needed to adapt
+     @param sampleRate          sample rate as needed to adapt 
                                 capacitors/inductors
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T ) = 0;
+    virtual double calculateUpRes( double sampleRate ) = 0;
 
     //----------------------------------------------------------------------
     /**
@@ -909,12 +903,12 @@ public:
      Must be implemented in the user-defined subclass of wdfTerminatedRtype in
      the WDF application tree.
 
-     @param T                   sample period T = 1/fs as needed to adapt
+     @param sampleRate          sample rate as needed to adapt
                                 capacitors/inductors
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T ) = 0;
+    virtual double calculateUpRes( double sampleRate ) = 0;
 
     //----------------------------------------------------------------------
     /**
@@ -1016,12 +1010,12 @@ public:
      port resistance of the node to fulfill termination according to
      the series adaptation law Rup = Rleft + Rright.
 
-     @param T                   sample period T = 1/fs as needed to adapt
+     @param sampleRate          sample rate as needed to adapt
                                 capacitors/inductors
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T );
+    virtual double calculateUpRes( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -1109,12 +1103,12 @@ public:
      port resistance of the node to fulfill termination according to
      the series adaptation law Gup = Gleft + Gright.
 
-     @param T                   sample period T = 1/fs as needed to adapt
+     @param sampleRate          sample rate as needed to adapt
                                 capacitors/inductors
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T );
+    virtual double calculateUpRes( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -1184,12 +1178,12 @@ public:
      port resistance of the node to fulfill termination according to
      the inverters adaptation law Rup = Rchild.
 
-     @param T                   sample period T = 1/fs as needed to adapt
+     @param sampleRate          sample rate as needed to adapt
                                 capacitors/inductors
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T );
+    virtual double calculateUpRes( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -1273,9 +1267,9 @@ protected:
      */
     double C;
     /**
-     Sample period in seconds
+     Sample rate in Hertz
      */
-    double T;
+    double sampleRate;
     /**
      Paramter for alpha transform
      */
@@ -1294,12 +1288,12 @@ public:
      Creates a capacitor with capacitance C.
 
      @param C                  physical capacitance of the component in Farads
-     @param T                  sample period T = 1/fs in seconds
+     @param sampleRate         sample rate in Hertz
      @param alpha              parameter in alpha transform, default = 1.0
                                (Bilinear transform)
      */
     wdfTerminatedCap( double C,
-                      double T,
+                      double sampleRate,
                       double alpha = 1.0 );
 
     //----------------------------------------------------------------------
@@ -1308,14 +1302,14 @@ public:
 
      This function is called from adaptPorts(). It returns the upfacing
      port resistance of the node to fulfill termination according to
-     the capacitors adaptation law Rup = T / ( 2.0 * C ).
+     the capacitors adaptation law Rup = 1 / ( 2.0 * sampleRate * C ).
 
-     @param T                   sample period T = 1/fs in seconds as needed to
+     @param sampleRate          sample rate in Hertz as needed to
                                 adapt the capacitor
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T );
+    virtual double calculateUpRes( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -1363,12 +1357,12 @@ public:
      Creates an inductor with inductance L.
 
      @param L                  physical inductance of the component in Henry
-     @param T                  sample period T = 1/fs in seconds
+     @param sampleRate         sample rate in Hertz
      @param alpha              parameter in alpha transform, default = 1.0
                                (Bilinear transform)
      */
     wdfTerminatedInd( double L,
-                      double T,
+                      double sampleRate,
                       double alpha = 1.0 );
 
     //----------------------------------------------------------------------
@@ -1377,14 +1371,14 @@ public:
 
      This function is called from adaptPorts(). It returns the upfacing
      port resistance of the node to fulfill termination according to
-     the inverters adaptation law Rup = R = ( 2.0 * L ) / T.
+     the inverters adaptation law Rup = R = 2.0 * sampleRate L.
 
-     @param T                   sample period T = 1/fs in seconds as needed to
+     @param sampleRate          sample rate in Hertz as needed to
                                 adapt the capacitor
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T );
+    virtual double calculateUpRes( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -1426,9 +1420,9 @@ public:
      */
     double L;
     /**
-     Sample period in seconds
+     Sample rate in Hertz
      */
-    double T;
+    double sampleRate;
     /**
      Parameter in alpha-transform
     */
@@ -1462,12 +1456,12 @@ public:
      port resistance of the node to fulfill termination according to
      the resistors adaptation law Rup = R.
 
-     @param T                   sample period T = 1/fs in seconds as needed to
+     @param sampleRate          sample rate in Hertz as needed to
                                 adapt the capacitor
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T );
+    virtual double calculateUpRes( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -1534,12 +1528,12 @@ public:
      port resistance of the node to fulfill termination according to
      the adaptation law Rup = Rser.
 
-     @param T                   sample period T = 1/fs in seconds as needed to
+     @param sampleRate          sample rate in Hertz as needed to
                                 adapt the capacitor
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T );
+    virtual double calculateUpRes( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -1611,12 +1605,12 @@ public:
      port resistance of the node to fulfill termination according to
      the adaptation law Rup = Rpar.
 
-     @param T                   sample period T = 1/fs in seconds as needed to
+     @param sampleRate          sample rate in Hertz as needed to
                                 adapt the element
      @returns                   a double type port resistance of that element
                                 in Ohms
      */
-    virtual double calculateUpRes( double T );
+    virtual double calculateUpRes( double sampleRate );
 
     //----------------------------------------------------------------------
     /**
@@ -1816,9 +1810,9 @@ class wdfUnterminatedCap : public wdfRootNode {
 protected:
     //----------------------------------------------------------------------
     /**
-     Sample period in seconds
+     Sample rate in Hertz
     */
-    double T;
+    double sampleRate;
     /**
      Place to store the previous incident wave component.
     */
@@ -1843,12 +1837,12 @@ public:
      Creates an unadapted capacitor with capacitance C.
 
      @param C                  physical capacitance of the component in Farads
-     @param T                  sample period T = 1/fs in seconds
+     @param sampleRate         sample rate in Hertz
      @param alpha              parameter in alpha transform, default = 1.0
                                (Bilinear transform)
     */
     wdfUnterminatedCap( double C,
-                        double T,
+                        double sampleRate,
                         double alpha = 1.0 );
 
     //----------------------------------------------------------------------
@@ -1912,9 +1906,9 @@ class wdfUnterminatedInd : public wdfRootNode {
 protected:
     //----------------------------------------------------------------------
     /**
-     Sample period in seconds
+     Sample rate in Hertz
     */
-    double T;
+    double sampleRate;
     /**
      Place to store the previous incident wave component.
     */
@@ -1939,12 +1933,12 @@ public:
      Creates an unadapted inductor with capacitance L.
 
      @param L                  physical inductance of the component in Henry
-     @param T                  sample period T = 1/fs in seconds
+     @param sampleRate         sample rate in Hertz
      @param alpha              parameter in alpha transform, default = 1.0
                                (Bilinear transform)
     */
     wdfUnterminatedInd( double L,
-                        double T,
+                        double sampleRate,
                         double alpha = 1.0 );
 
     //----------------------------------------------------------------------
