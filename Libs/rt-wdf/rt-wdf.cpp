@@ -228,7 +228,6 @@ std::string wdfRootSimple::getType( ) const {
 //                                  P O R T
 //==============================================================================
 wdfPort::wdfPort( wdfTreeNode *connectedNode ) : Rp( 0 ),
-                                                 Gp( 0 ),
                                                  a( 0 ),
                                                  b( 0 ),
                                                  connectedNode( connectedNode ) {
@@ -549,11 +548,12 @@ void wdfTerminatedLeaf::calculateScatterCoeffs( ) {
 #pragma mark Terminated Capacitor
 //==============================================================================
 wdfTerminatedCap::wdfTerminatedCap( double C,
-                                    double sampleRate ) : wdfTerminatedLeaf( ),
+                                    double sampleRate,
+                                    double alpha) : wdfTerminatedLeaf( ),
                                                  C( C ),
                                                  sampleRate( sampleRate ),
+                                                 alpha( alpha ),
                                                  prevA( 0 ) {
-
 }
 
 //----------------------------------------------------------------------
@@ -562,7 +562,8 @@ double wdfTerminatedCap::calculateUpRes( double sampleRate ) {
     assert(C > 0 && "capacitance must be a nonzero positive number.");
 
     this->sampleRate = sampleRate;
-    const double R = 1 / ( 2.0 * sampleRate * C );
+    const double R = 1 / ( (1.0 + alpha) * sampleRate * C );
+
     return R;
 }
 
@@ -584,9 +585,11 @@ std::string wdfTerminatedCap::getType( ) const {
 #pragma mark Terminated Inductor
 //==============================================================================
 wdfTerminatedInd::wdfTerminatedInd( double L,
-                                    double sampleRate ) : wdfTerminatedLeaf( ),
+                                    double sampleRate,
+                                    double alpha ) : wdfTerminatedLeaf( ),
                                                  L( L ),
                                                  sampleRate( sampleRate ),
+                                                 alpha( alpha ),
                                                  prevA( 0 ) {
 
 }
@@ -597,7 +600,8 @@ double wdfTerminatedInd::calculateUpRes( double sampleRate ) {
     assert(L > 0 && "inductance must be a nonzero positive number.");
 
     this->sampleRate = sampleRate;
-    const double R = 2.0 * sampleRate * L ;
+    const double R = (1.0 + alpha) * sampleRate * L ;
+
     return R;
 }
 
@@ -761,8 +765,10 @@ std::string wdfUnterminatedSwitch::getType( ) const {
 #pragma mark Unterminated Capacitor
 //==============================================================================
 wdfUnterminatedCap::wdfUnterminatedCap(double C,
-                                       double sampleRate ) : wdfRootNode(1),
+                                       double sampleRate,
+                                       double alpha ) : wdfRootNode(1),
                                                     sampleRate(sampleRate),
+                                                    alpha(alpha),
                                                     prevA(0),
                                                     prevB(0),
                                                     C(C) {
@@ -787,14 +793,16 @@ std::string wdfUnterminatedCap::getType( ) const {
 
 void wdfUnterminatedCap::setPortResistance( double Rp ) {
     this->Rp = Rp;
-    reflectionCoeff = (Rp - 1 / (2 * sampleRate * C)) / (Rp + (1 / (2 * sampleRate * C)));
+    reflectionCoeff = (Rp - 1 / ((1.0 + alpha) * sampleRate * C)) / (Rp + (1 / ((1.0 + alpha) * sampleRate * C)));
 }
 
 #pragma mark Unterminated Inductor
 //==============================================================================
 wdfUnterminatedInd::wdfUnterminatedInd( double L,
-                                        double sampleRate ) : wdfRootNode(1),
+                                        double sampleRate,
+                                        double alpha ) : wdfRootNode(1),
                                                      sampleRate(sampleRate),
+                                                     alpha(alpha),
                                                      prevA(0),
                                                      prevB(0),
                                                      L(L) {
@@ -819,7 +827,7 @@ std::string wdfUnterminatedInd::getType( ) const {
 
 void wdfUnterminatedInd::setPortResistance( double Rp ) {
     this->Rp = Rp;
-    reflectionCoeff = (Rp - 2 * sampleRate * L) / (Rp + 2 * sampleRate * L);
+    reflectionCoeff = (Rp - (1.0 + alpha) * sampleRate * L) / (Rp + (1.0 + alpha) * sampleRate * L);
 }
 
 
@@ -858,8 +866,8 @@ wdfIdealVSource::wdfIdealVSource( double Vs ) : wdfRootNode(1),
 
 //----------------------------------------------------------------------
 void wdfIdealVSource::calculateDownB( vec* ascendingWaves,
-                                            vec* descendingWaves,
-                                            size_t* portIndex) {
+                                      vec* descendingWaves,
+                                      size_t* portIndex) {
     descendingWaves->at(*portIndex) = 2 * Vs - ascendingWaves->at(*portIndex);
     (*portIndex) += numPorts;
 }
@@ -898,4 +906,3 @@ std::string wdfIdealCSource::getType( ) const {
 void wdfIdealCSource::setPortResistance( double Rp ) {
     this->Rp = Rp;
 }
-

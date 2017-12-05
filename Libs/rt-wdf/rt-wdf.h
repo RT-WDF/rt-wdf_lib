@@ -621,12 +621,6 @@ public:
 
     //----------------------------------------------------------------------
     /**
-     The inverse WDF port resistance in Siemens
-     */
-    double Gp;
-
-    //----------------------------------------------------------------------
-    /**
      Incident wave (incoming wave)
      */
     double a;
@@ -1266,6 +1260,26 @@ public:
 //==============================================================================
 class wdfTerminatedCap : public wdfTerminatedLeaf {
 
+protected:
+    //----------------------------------------------------------------------
+    /**
+     Capacitance in Farad
+     */
+    double C;
+    /**
+     Sample rate in Hertz
+     */
+    double sampleRate;
+    /**
+     Paramter for alpha transform
+     */
+    double alpha;
+
+    /**
+     One sample delay element
+     */
+    double prevA;
+    
 public:
     //----------------------------------------------------------------------
     /**
@@ -1275,9 +1289,12 @@ public:
 
      @param C                  physical capacitance of the component in Farads
      @param sampleRate         sample rate in Hertz
+     @param alpha              parameter in alpha transform, default = 1.0
+                               (Bilinear transform)
      */
     wdfTerminatedCap( double C,
-                      double sampleRate );
+                      double sampleRate,
+                      double alpha = 1.0 );
 
     //----------------------------------------------------------------------
     /**
@@ -1327,20 +1344,6 @@ public:
      */
     virtual std::string getType( ) const;
 
-    //----------------------------------------------------------------------
-    /**
-     Capacitance in Farad
-     */
-    double C;
-    /**
-     Sample rate in Hertz
-     */
-    double sampleRate;
-    /**
-     One sample delay element
-     */
-    double prevA;
-
 };
 
 //==============================================================================
@@ -1355,9 +1358,12 @@ public:
 
      @param L                  physical inductance of the component in Henry
      @param sampleRate         sample rate in Hertz
+     @param alpha              parameter in alpha transform, default = 1.0
+                               (Bilinear transform)
      */
     wdfTerminatedInd( double L,
-                      double sampleRate );
+                      double sampleRate,
+                      double alpha = 1.0 );
 
     //----------------------------------------------------------------------
     /**
@@ -1417,6 +1423,10 @@ public:
      Sample rate in Hertz
      */
     double sampleRate;
+    /**
+     Parameter in alpha-transform
+    */
+    double alpha;
     /**
      One sample delay element
      */
@@ -1828,9 +1838,12 @@ public:
 
      @param C                  physical capacitance of the component in Farads
      @param sampleRate         sample rate in Hertz
+     @param alpha              parameter in alpha transform, default = 1.0
+                               (Bilinear transform)
     */
     wdfUnterminatedCap( double C,
-                        double sampleRate );
+                        double sampleRate,
+                        double alpha = 1.0 );
 
     //----------------------------------------------------------------------
     /**
@@ -1880,6 +1893,11 @@ public:
     */
     double C;
 
+    //----------------------------------------------------------------------
+    /**
+     Parameter in alpha-transform
+    */
+    double alpha;
 };
 
 //==============================================================================
@@ -1916,9 +1934,12 @@ public:
 
      @param L                  physical inductance of the component in Henry
      @param sampleRate         sample rate in Hertz
+     @param alpha              parameter in alpha transform, default = 1.0
+                               (Bilinear transform)
     */
     wdfUnterminatedInd( double L,
-                        double sampleRate );
+                        double sampleRate,
+                        double alpha = 1.0 );
 
     //----------------------------------------------------------------------
     /**
@@ -1965,6 +1986,11 @@ public:
      Inductance in Henry
     */
     double L;
+    //----------------------------------------------------------------------
+    /**
+     Parameter in alpha-transform
+    */
+    double alpha;
 
 };
 
